@@ -59,23 +59,19 @@ Eigen::Matrix3f icp::solveTransform() {
   //to solve for transformation, we just need to do subtract the averages of the x y coordinates    
   //calc averages
   float meas_t_minus_1_x_avg = 0; 
+  float meas_t_minus_1_y_avg = 0; 
+
   for (auto x : this->msg_t_minus_1) {
     meas_t_minus_1_x_avg += x[0];
+    meas_t_minus_1_y_avg += x[1];
   }
 
-  float meas_t_minus_1_y_avg = 0; 
-  for (auto y : this->msg_t_minus_1) {
-    meas_t_minus_1_y_avg += y[1];
-  }
 
   float meas_t_x_avg = 0; 
+  float meas_t_y_avg = 0; 
   for (auto x : this->msg_t) {
     meas_t_x_avg += x[0];
-  }
-
-  float meas_t_y_avg = 0; 
-  for (auto y : this->msg_t) {
-    meas_t_y_avg += y[1];
+    meas_t_y_avg += x[1];
   }
 
   meas_t_minus_1_x_avg /= msg_t_minus_1.size();
