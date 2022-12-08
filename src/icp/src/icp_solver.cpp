@@ -58,6 +58,10 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
 Eigen::Matrix3f icp::solveTransform() {
   //to solve for transformation, we just need to do subtract the averages of the x y coordinates    
   //calc averages
+  //  [R R][t]  
+  //  [R R][t]
+  //  [0 0  1]
+
   float meas_t_minus_1_x_avg = 0; 
   float meas_t_minus_1_y_avg = 0; 
 
@@ -81,13 +85,12 @@ Eigen::Matrix3f icp::solveTransform() {
 
   std::cout << "x avg trans: " <<  meas_t_x_avg - meas_t_minus_1_x_avg << std::endl;
   std::cout << "y avg trans: " <<  meas_t_y_avg - meas_t_minus_1_y_avg << std::endl;
-//  [R R][t]  
-//  [R R][t]
-//  [0 0  1]
+
+  // we have to find the rotation transformation
+  // we want to perform kd-tree nearest neighbor search
+  // we want to take each point from xt-1 and find the nearest neighbor in xt
+  // we need to sort out all the points in xt first
 }
-
-
-
 
 
 int main(int argc, char **argv)
@@ -102,3 +105,5 @@ int main(int argc, char **argv)
 
   return 0;
 }
+
+//A Nearest Neighbor Method for Efficient ICP
