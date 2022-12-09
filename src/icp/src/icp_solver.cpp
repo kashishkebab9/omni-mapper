@@ -47,9 +47,6 @@ KDNode* buildKDTree(std::vector<Eigen::Vector2f> point_set, int depth) {
 }
 
 
-
-
-
 class icp {
   public:
     void scanCallback(const sensor_msgs::LaserScan msg);
@@ -133,6 +130,8 @@ Eigen::Matrix3f icp::solveTransform() {
   // we want to perform kd-tree nearest neighbor search
   // we want to take each point from xt-1 and find the nearest neighbor in xt
   // we need to sort out all the points in xt first
+
+  buildKDTree(this->msg_t, int 0);
 }
 
 
