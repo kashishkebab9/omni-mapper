@@ -7,6 +7,49 @@
 #include <eigen3/Eigen/Dense>
 #include <cmath>
 
+struct KDNode {
+  public:
+    KDNode * left_node;
+    KDNode * right_node;
+    Eigen::Vector2f coordinate;
+};
+
+KDNode* buildKDTree(std::vector<Eigen::Vector2f> point_set, int depth) {
+  KDNode * node = new KDNode;
+  node->left_node = nullptr;
+  node->right_node = nullptr;
+
+
+  if (point_set.size() == 1) {
+    return node;
+  }
+
+  if ( depth % 2 == 0 ) {
+    std::sort(point_set.begin(), point_set.end(), [](const Eigen::Vector2f& a, const Eigen::Vector2f& b) {
+      return a.x() < b.x();
+    });
+  } else {
+    std::sort(point_set.begin(), point_set.end(), [](const Eigen::Vector2f& a, const Eigen::Vector2f& b) {
+      return a.y() < b.y();
+    });
+  }
+
+  int median_index = point_set.size()/2;
+  node->coordinate = point_set[median_index];
+
+  std::vector<Eigen::Vector2f> leftPoints(point_set.begin(), point_set.begin() + median_index);
+  node->left_node = buildKDTree(leftPoints, depth + 1);
+
+  std::vector<Eigen::Vector2f> rightPoints(point_set.begin() + median_index + 1, point_set.end());
+  node->right_node = buildKDTree(rightPoints, depth + 1);
+
+  return node;
+}
+
+
+
+
+
 class icp {
   public:
     void scanCallback(const sensor_msgs::LaserScan msg);
