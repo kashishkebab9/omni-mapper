@@ -12,12 +12,14 @@ struct KDNode {
     KDNode * left_node;
     KDNode * right_node;
     Eigen::Vector2f coordinate;
+    int depth;
 };
 
 KDNode* buildKDTree(std::vector<Eigen::Vector2f> point_set, int depth) {
   KDNode * node = new KDNode;
   node->left_node = nullptr;
   node->right_node = nullptr;
+  node->depth = depth;
 
 
   if (point_set.size() == 1) {
@@ -44,6 +46,39 @@ KDNode* buildKDTree(std::vector<Eigen::Vector2f> point_set, int depth) {
   node->right_node = buildKDTree(rightPoints, depth + 1);
 
   return node;
+}
+
+KDNode* NearestNeigborKD(KDNode* node, Eigen::Vector2f input_pt) {
+  //A Nearest Neighbor Method for Efficient ICP
+  //   o    x  is input x greater than o.x?
+  //  o o   y  is input y greater than o.y? 
+  // o o o  x  is input x greater than o.x?
+  
+  if(node->left_node == nullptr || node->right_node == nullptr) {
+    //we have reached leaf and must start comparing upwards
+
+  }
+  int depth = node->depth;
+  if (depth %2 == 0) {
+    //we want to compare x values of input and node
+    if(input_pt[0] > node->coordinate[0]) {
+      //next node is right child of this one
+
+    } else {
+      //next node is left child of this one
+
+    }
+  } else {
+    //we want to compare y values of input and node
+    if(input_pt[1] > node->coordinate[1]) {
+      //next node is right child of this one
+
+    } else {
+      //next node is left child of this one
+
+    }
+  }
+
 }
 
 
@@ -148,4 +183,3 @@ int main(int argc, char **argv)
   return 0;
 }
 
-//A Nearest Neighbor Method for Efficient ICP
