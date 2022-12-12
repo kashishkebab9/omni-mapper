@@ -18,10 +18,15 @@ struct KDNode {
 
 class KDTree {
   public:
+  KDNode* root_node;
   KDNode* buildTree(std::vector<Eigen::Vector2f> point_set, int depth=0, KDNode * parent_node=NULL);
+  KDNode* nearestNeighbor(Eigen::Vector2f input_pt, KDNode* node);
 
 };
 
+float calcDistance(KDNode * node,  Eigen::Vector2f point) {
+  return (sqrt(pow(point[0] + node->coordinate[0] ,2) + pow(point[1] + node->coordinate[1], 2)));
+}
 KDNode* KDTree::buildTree(std::vector<Eigen::Vector2f> point_set, int depth, KDNode * parent_node) {
   //this root_node
   std::cout << "starting node iteration" << std::endl;
@@ -63,8 +68,50 @@ KDNode* KDTree::buildTree(std::vector<Eigen::Vector2f> point_set, int depth, KDN
   std::cout << "Building right node tree" << std::endl;
   node->right_node = buildTree(rightPoints, depth + 1, node);
 
+  this->root_node = node;
+
   return node;
 }
+
+KDNode* KDTree::nearestNeighbor(Eigen::Vector2f input_pt, KDNode* node) {
+  KDNode * iter = node; 
+  KDNode * nearest_neighbor;
+  if (node == NULL) {
+    std::cout << "Node input is NULL!" << std::endl;
+    return node;
+  }
+
+  float best_dist = 1000000.0;
+  //as we traverse down we want to record the nearest_neighbor we meet
+  while (iter->right_node != NULL || iter->left_node !=NULL) {
+    float dist = calcDistance(iter, input_pt);
+    if ( dist < best_dist) {
+      best_dist = dist; 
+      nearest_neighbor = iter;
+    }
+
+    if (iter->depth % 2 ==0) {
+      if(input_pt[0] > node->coordinate[0]) {
+        if(node->right_node != NULL) iter = node->right_node;
+      } else {
+        if(node->left_node != NULL) iter = node->left_node;
+      }
+    } else {
+      if(input_pt[1] > node->coordinate[1]) {
+        if(node->right_node != NULL) iter = node->right_node;
+      } else {
+        if(node->left_node != NULL) iter = node->left_node;
+      }
+    }
+
+  }
+  std::cout << "nearest neighbor coordinate: " << nearest_neighbor->coordinate[0] << ", " << nearest_neighbor->coordinate[1] << std::endl;
+  //the above should return us the leaf node associated with this input pt
+
+}
+
+
+
 
 int main() {
     Eigen::Vector2f in_1(2.0f, 4.0f);
@@ -82,6 +129,9 @@ int main() {
     
     KDTree tree;
     auto node = tree.buildTree(input_vec);
+
+    Eigen::Vector2f nn_input(2.0f, 4.1f);
+    tree.nearestNeighbor(nn_input, tree.root_node);
 
     std::cout <<"Done";
     std::cout <<"Done";
