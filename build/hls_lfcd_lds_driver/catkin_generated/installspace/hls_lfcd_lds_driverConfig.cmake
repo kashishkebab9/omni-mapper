@@ -68,7 +68,7 @@ set(hls_lfcd_lds_driver_CONFIG_INCLUDED TRUE)
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
   set(hls_lfcd_lds_driver_SOURCE_PREFIX /home/kgarg/robotics/omni-mapper/src/hls_lfcd_lds_driver)
-  set(hls_lfcd_lds_driver_DEVEL_PREFIX /home/kgarg/robotics/omni-mapper/devel)
+  set(hls_lfcd_lds_driver_DEVEL_PREFIX /home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver)
   set(hls_lfcd_lds_driver_INSTALL_PREFIX "")
   set(hls_lfcd_lds_driver_PREFIX ${hls_lfcd_lds_driver_DEVEL_PREFIX})
 else()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/kgarg/robotics/omni-mapper/install/lib;/opt/ros/noetic/lib)
+    foreach(path /home/kgarg/robotics/omni-mapper/install/lib;/home/kgarg/robotics/omni-mapper/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

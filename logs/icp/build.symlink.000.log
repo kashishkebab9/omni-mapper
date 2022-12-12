@@ -1,0 +1,4 @@
+Symlinking /home/kgarg/robotics/omni-mapper/devel/lib/icp/icp
+Symlinking /home/kgarg/robotics/omni-mapper/devel/lib/pkgconfig/icp.pc
+Symlinking /home/kgarg/robotics/omni-mapper/devel/share/icp/cmake/icpConfig-version.cmake
+Symlinking /home/kgarg/robotics/omni-mapper/devel/share/icp/cmake/icpConfig.cmake

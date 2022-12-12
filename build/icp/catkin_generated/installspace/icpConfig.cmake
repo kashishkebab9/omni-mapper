@@ -68,7 +68,7 @@ set(icp_CONFIG_INCLUDED TRUE)
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
   set(icp_SOURCE_PREFIX /home/kgarg/robotics/omni-mapper/src/icp)
-  set(icp_DEVEL_PREFIX /home/kgarg/robotics/omni-mapper/devel)
+  set(icp_DEVEL_PREFIX /home/kgarg/robotics/omni-mapper/devel/.private/icp)
   set(icp_INSTALL_PREFIX "")
   set(icp_PREFIX ${icp_DEVEL_PREFIX})
 else()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/kgarg/robotics/omni-mapper/install/lib;/opt/ros/noetic/lib)
+    foreach(path /home/kgarg/robotics/omni-mapper/install/lib;/home/kgarg/robotics/omni-mapper/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

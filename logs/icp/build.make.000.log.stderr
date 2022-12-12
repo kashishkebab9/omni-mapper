@@ -1,0 +1,8 @@
+[01m[K/home/kgarg/robotics/omni-mapper/src/icp/src/icp_solver.cpp:[m[K In function ‘[01m[KKDNode* NearestNeigborKD(KDNode*, Eigen::Vector2f)[m[K’:
+[01m[K/home/kgarg/robotics/omni-mapper/src/icp/src/icp_solver.cpp:86:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
+   86 | [01;35m[K}[m[K
+      | [01;35m[K^[m[K
+[01m[K/home/kgarg/robotics/omni-mapper/src/icp/src/icp_solver.cpp:[m[K In member function ‘[01m[KEigen::Matrix3f icp::solveTransform()[m[K’:
+[01m[K/home/kgarg/robotics/omni-mapper/src/icp/src/icp_solver.cpp:174:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
+  174 | [01;35m[K}[m[K
+      | [01;35m[K^[m[K

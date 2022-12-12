@@ -1,2 +1,0 @@
-hls_lfcd_lds_driver:icp
--DCATKIN_DEVEL_PREFIX=/home/kgarg/robotics/omni-mapper/devel -DCMAKE_INSTALL_PREFIX=/home/kgarg/robotics/omni-mapper/install -G Unix Makefiles

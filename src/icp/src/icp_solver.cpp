@@ -1,3 +1,4 @@
+#include <math.h>
 #define _USE_MATH_DEFINES
 
 #include "ros/ros.h"
@@ -49,20 +50,28 @@ KDNode* buildKDTree(std::vector<Eigen::Vector2f> point_set, int depth) {
 }
 
 KDNode* NearestNeigborKD(KDNode* node, Eigen::Vector2f input_pt) {
+
   //A Nearest Neighbor Method for Efficient ICP
   //   o    x  is input x greater than o.x?
   //  o o   y  is input y greater than o.y? 
   // o o o  x  is input x greater than o.x?
+
   KDNode * iter;
   iter = node;
-  
-  if(node->left_node == nullptr || node->right_node == nullptr) {
-    //we have reached leaf and must start comparing upwards
 
-    auto leaf_distance = sqrt((input_pt[0] - iter->coordinate[0])^2 + (input_pt[1] - iter->coordinate[1])^2) ;
+  //Deal with bullshit unputs:
+  if (node == nullptr) {
+    ROS_INFO("Input KDTree Node is NULL!"); 
+    return node;
+  }
+  
+  if(node->left_node == nullptr && node->right_node == nullptr) {
+    //we have reached leaf and must start comparing upwards
+    auto leaf_distance = sqrt(pow(input_pt[0] - iter->coordinate[0], 2) + pow(input_pt[1] - iter->coordinate[1],2)) ;
   }
 
   int depth = node->depth;
+
   if (depth %2 == 0) {
     //we want to compare x values of input and node
     if(input_pt[0] > node->coordinate[0]) {
@@ -83,8 +92,13 @@ KDNode* NearestNeigborKD(KDNode* node, Eigen::Vector2f input_pt) {
     }
   }
 
+  NearestNeigborKD(node, input_pt);
+
+  
 }
 
+
+//-----------------------------------------------------------------------------------------------------------//
 
 class icp {
   public:
@@ -170,9 +184,10 @@ Eigen::Matrix3f icp::solveTransform() {
   // we want to take each point from xt-1 and find the nearest neighbor in xt
   // we need to sort out all the points in xt first
 
-  buildKDTree(this->msg_t, int 0);
+  buildKDTree(this->msg_t,  0);
 }
 
+//-----------------------------------------------------------------------------------------------------------//
 
 int main(int argc, char **argv)
 {

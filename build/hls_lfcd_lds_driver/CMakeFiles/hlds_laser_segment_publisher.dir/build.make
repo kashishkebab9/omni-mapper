@@ -43,32 +43,32 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kgarg/robotics/omni-mapper/src
+CMAKE_SOURCE_DIR = /home/kgarg/robotics/omni-mapper/src/hls_lfcd_lds_driver
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kgarg/robotics/omni-mapper/build
+CMAKE_BINARY_DIR = /home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver
 
 # Include any dependencies generated for this target.
-include hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/depend.make
+include CMakeFiles/hlds_laser_segment_publisher.dir/depend.make
 
 # Include the progress variables for this target.
-include hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/progress.make
+include CMakeFiles/hlds_laser_segment_publisher.dir/progress.make
 
 # Include the compile flags for this target's objects.
-include hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/flags.make
+include CMakeFiles/hlds_laser_segment_publisher.dir/flags.make
 
-hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.o: hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/flags.make
-hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.o: /home/kgarg/robotics/omni-mapper/src/hls_lfcd_lds_driver/src/hlds_laser_segment_publisher.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kgarg/robotics/omni-mapper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.o"
-	cd /home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.o -c /home/kgarg/robotics/omni-mapper/src/hls_lfcd_lds_driver/src/hlds_laser_segment_publisher.cpp
+CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.o: CMakeFiles/hlds_laser_segment_publisher.dir/flags.make
+CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.o: /home/kgarg/robotics/omni-mapper/src/hls_lfcd_lds_driver/src/hlds_laser_segment_publisher.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.o -c /home/kgarg/robotics/omni-mapper/src/hls_lfcd_lds_driver/src/hlds_laser_segment_publisher.cpp
 
-hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.i: cmake_force
+CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.i"
-	cd /home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kgarg/robotics/omni-mapper/src/hls_lfcd_lds_driver/src/hlds_laser_segment_publisher.cpp > CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kgarg/robotics/omni-mapper/src/hls_lfcd_lds_driver/src/hlds_laser_segment_publisher.cpp > CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.i
 
-hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.s: cmake_force
+CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.s"
-	cd /home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kgarg/robotics/omni-mapper/src/hls_lfcd_lds_driver/src/hlds_laser_segment_publisher.cpp -o CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kgarg/robotics/omni-mapper/src/hls_lfcd_lds_driver/src/hlds_laser_segment_publisher.cpp -o CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.s
 
 # Object files for target hlds_laser_segment_publisher
 hlds_laser_segment_publisher_OBJECTS = \
@@ -77,39 +77,39 @@ hlds_laser_segment_publisher_OBJECTS = \
 # External object files for target hlds_laser_segment_publisher
 hlds_laser_segment_publisher_EXTERNAL_OBJECTS =
 
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.o
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/build.make
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/libroscpp.so
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libpthread.so
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/librosconsole.so
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/librosconsole_log4cxx.so
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/librosconsole_backend_interface.so
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/liblog4cxx.so
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/libxmlrpcpp.so
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/libroscpp_serialization.so
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/librostime.so
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/libcpp_common.so
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
-/home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/kgarg/robotics/omni-mapper/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable /home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher"
-	cd /home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/hlds_laser_segment_publisher.dir/link.txt --verbose=$(VERBOSE)
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: CMakeFiles/hlds_laser_segment_publisher.dir/src/hlds_laser_segment_publisher.cpp.o
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: CMakeFiles/hlds_laser_segment_publisher.dir/build.make
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/libroscpp.so
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libpthread.so
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/librosconsole.so
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/librosconsole_log4cxx.so
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/librosconsole_backend_interface.so
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/liblog4cxx.so
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/libxmlrpcpp.so
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/libroscpp_serialization.so
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/librostime.so
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /opt/ros/noetic/lib/libcpp_common.so
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
+/home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher: CMakeFiles/hlds_laser_segment_publisher.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable /home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher"
+	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/hlds_laser_segment_publisher.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/build: /home/kgarg/robotics/omni-mapper/devel/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher
+CMakeFiles/hlds_laser_segment_publisher.dir/build: /home/kgarg/robotics/omni-mapper/devel/.private/hls_lfcd_lds_driver/lib/hls_lfcd_lds_driver/hlds_laser_segment_publisher
 
-.PHONY : hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/build
+.PHONY : CMakeFiles/hlds_laser_segment_publisher.dir/build
 
-hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/clean:
-	cd /home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver && $(CMAKE_COMMAND) -P CMakeFiles/hlds_laser_segment_publisher.dir/cmake_clean.cmake
-.PHONY : hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/clean
+CMakeFiles/hlds_laser_segment_publisher.dir/clean:
+	$(CMAKE_COMMAND) -P CMakeFiles/hlds_laser_segment_publisher.dir/cmake_clean.cmake
+.PHONY : CMakeFiles/hlds_laser_segment_publisher.dir/clean
 
-hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/depend:
-	cd /home/kgarg/robotics/omni-mapper/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/kgarg/robotics/omni-mapper/src /home/kgarg/robotics/omni-mapper/src/hls_lfcd_lds_driver /home/kgarg/robotics/omni-mapper/build /home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver /home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/DependInfo.cmake --color=$(COLOR)
-.PHONY : hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/depend
+CMakeFiles/hlds_laser_segment_publisher.dir/depend:
+	cd /home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/kgarg/robotics/omni-mapper/src/hls_lfcd_lds_driver /home/kgarg/robotics/omni-mapper/src/hls_lfcd_lds_driver /home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver /home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver /home/kgarg/robotics/omni-mapper/build/hls_lfcd_lds_driver/CMakeFiles/hlds_laser_segment_publisher.dir/DependInfo.cmake --color=$(COLOR)
+.PHONY : CMakeFiles/hlds_laser_segment_publisher.dir/depend
 

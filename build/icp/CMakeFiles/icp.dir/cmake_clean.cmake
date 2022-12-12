@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/kgarg/robotics/omni-mapper/devel/lib/icp/icp"
-  "/home/kgarg/robotics/omni-mapper/devel/lib/icp/icp.pdb"
+  "/home/kgarg/robotics/omni-mapper/devel/.private/icp/lib/icp/icp"
+  "/home/kgarg/robotics/omni-mapper/devel/.private/icp/lib/icp/icp.pdb"
   "CMakeFiles/icp.dir/src/icp_solver.cpp.o"
 )
 

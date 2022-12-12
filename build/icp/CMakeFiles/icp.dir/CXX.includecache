@@ -7,6 +7,8 @@
 #IncludeRegexTransform: 
 
 /home/kgarg/robotics/omni-mapper/src/icp/src/icp_solver.cpp
+math.h
+-
 ros/ros.h
 /home/kgarg/robotics/omni-mapper/src/icp/src/ros/ros.h
 std_msgs/String.h
