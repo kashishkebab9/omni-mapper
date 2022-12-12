@@ -68,6 +68,8 @@ KDNode* NearestNeigborKD(KDNode* node, Eigen::Vector2f input_pt) {
   if(node->left_node == nullptr && node->right_node == nullptr) {
     //we have reached leaf and must start comparing upwards
     auto leaf_distance = sqrt(pow(input_pt[0] - iter->coordinate[0], 2) + pow(input_pt[1] - iter->coordinate[1],2)) ;
+    //we need to unwind
+
   }
 
   int depth = node->depth;
@@ -93,8 +95,6 @@ KDNode* NearestNeigborKD(KDNode* node, Eigen::Vector2f input_pt) {
   }
 
   NearestNeigborKD(node, input_pt);
-
-  
 }
 
 
