@@ -89,9 +89,20 @@ Eigen::Matrix3f icp::solveTransform() {
   std::cout << "y avg trans: " <<  meas_t_y_avg - meas_t_minus_1_y_avg << std::endl;
 
   // we have to find the rotation transformation
-  // we want to perform kd-tree nearest neighbor search
   // we want to take each point from xt-1 and find the nearest neighbor in xt
   // we need to sort out all the points in xt first
+  KDTree tree;
+  tree.buildTree(this->msg_t);
+  
+  //Eigen::Vector2f nn_test(.45f, -.67f);
+  //tree.nearestNeighbor(nn_test);
+  //
+  // now we need to perform the above method on every point of the other msg, however, we don't want multiple matches for each element, and we don't care if an element doesn't actually have a match
+  // I want to make a std::pair of float (distance) and KDNode(match neighbor)
+  // and then we need to iterate over that to remove any duplicates
+  for (int i = 0; i < msg_t_minus_1.size(); i++) {
+    tree.nearestNeighbor(msg_t_minus_1[i]);
+  } 
 
 }
 
