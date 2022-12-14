@@ -85,8 +85,8 @@ Eigen::Matrix3f icp::solveTransform() {
   meas_t_x_avg /= msg_t.size();
   meas_t_y_avg /= msg_t.size();
 
-  std::cout << "x avg trans: " <<  meas_t_x_avg - meas_t_minus_1_x_avg << std::endl;
-  std::cout << "y avg trans: " <<  meas_t_y_avg - meas_t_minus_1_y_avg << std::endl;
+  ROS_INFO("x avg trans: %f", meas_t_x_avg - meas_t_minus_1_x_avg);
+  ROS_INFO("y avg trans: %f", meas_t_y_avg - meas_t_minus_1_y_avg);
 
   // we have to find the rotation transformation
   // we want to take each point from xt-1 and find the nearest neighbor in xt
@@ -100,6 +100,8 @@ Eigen::Matrix3f icp::solveTransform() {
   // now we need to perform the above method on every point of the other msg, however, we don't want multiple matches for each element, and we don't care if an element doesn't actually have a match
   // I want to make a std::pair of float (distance) and KDNode(match neighbor)
   // and then we need to iterate over that to remove any duplicates
+  // Although perhaps we don't need to do all that
+
   for (int i = 0; i < msg_t_minus_1.size(); i++) {
     tree.nearestNeighbor(msg_t_minus_1[i]);
   } 
