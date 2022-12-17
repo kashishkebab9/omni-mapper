@@ -97,14 +97,20 @@ Eigen::Matrix3f icp::solveTransform() {
   //Eigen::Vector2f nn_test(.45f, -.67f);
   //tree.nearestNeighbor(nn_test);
   //
-  // now we need to perform the above method on every point of the other msg, however, we don't want multiple matches for each element, and we don't care if an element doesn't actually have a match
-  // I want to make a std::pair of float (distance) and KDNode(match neighbor)
-  // and then we need to iterate over that to remove any duplicates
   // Although perhaps we don't need to do all that
+  //
+
+  std::vector<Eigen::Vector2f> mean_distance_minus_1;
+  std::vector<Eigen::Vector2f> mean_distance;
 
   for (int i = 0; i < msg_t_minus_1.size(); i++) {
     tree.nearestNeighbor(msg_t_minus_1[i]);
+
+
   } 
+
+  Eigen::Matrix3f temp_out_delete_later;
+  return temp_out_delete_later;
 
 }
 

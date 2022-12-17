@@ -98,7 +98,20 @@ KDNode* KDTree::nearestNeighbor(Eigen::Vector2f input_pt) {
         if(iter->left_node != NULL) iter = iter->left_node;
       }
     }
-
+    //we need to unwind and check recursively for any nearer neighbors    
+    while (iter != this->root_node) {
+      iter = iter->parent_node;
+      float right_child_dist = calcDistance(iter->right_node, input_pt);
+      float left_child_dist = calcDistance(iter->left_node, input_pt);
+      if (right_child_dist < best_dist) {
+        best_dist = right_child_dist;
+        nearest_neighbor = iter->right_node;
+      }
+      if (left_child_dist < best_dist) {
+        best_dist = left_child_dist;
+        nearest_neighbor = iter->left_node;
+      }
+    }
   }
 
   ROS_DEBUG("Nearest Neighbor Coordinate: [%f, %f]", nearest_neighbor->coordinate[0], nearest_neighbor->coordinate[1]);
