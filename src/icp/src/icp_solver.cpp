@@ -85,29 +85,36 @@ Eigen::Matrix3f icp::solveTransform() {
   meas_t_x_avg /= msg_t.size();
   meas_t_y_avg /= msg_t.size();
 
-  ROS_INFO("x avg trans: %f", meas_t_x_avg - meas_t_minus_1_x_avg);
-  ROS_INFO("y avg trans: %f", meas_t_y_avg - meas_t_minus_1_y_avg);
+  //ROS_INFO("x avg trans: %f", meas_t_x_avg - meas_t_minus_1_x_avg);
+  //ROS_INFO("y avg trans: %f", meas_t_y_avg - meas_t_minus_1_y_avg);
 
-  // we have to find the rotation transformation
-  // we want to take each point from xt-1 and find the nearest neighbor in xt
-  // we need to sort out all the points in xt first
   KDTree tree;
   tree.buildTree(this->msg_t);
   
   //Eigen::Vector2f nn_test(.45f, -.67f);
   //tree.nearestNeighbor(nn_test);
-  //
-  // Although perhaps we don't need to do all that
-  //
+
 
   std::vector<Eigen::Vector2f> mean_distance_minus_1;
   std::vector<Eigen::Vector2f> mean_distance;
 
-  for (int i = 0; i < msg_t_minus_1.size(); i++) {
-    tree.nearestNeighbor(msg_t_minus_1[i]);
+  //set abysmally high error threshold
+  float error_threshold = 10; 
+  float error = 1e9;
+
+  while ( error > error_threshold ) {
+    for (int i = 0; i < msg_t_minus_1.size(); i++) {
+      //find the nearest point-to-point neighbor
+      //TODO: Optimize in the future to be point-to-plane OR introduce feature based sampling methods instead 360-360 comparison
+      //we need the distance itself from each neighbor
+      tree.nearestNeighbor(msg_t_minus_1[i]);
 
 
-  } 
+
+
+    } 
+
+  }
 
   Eigen::Matrix3f temp_out_delete_later;
   return temp_out_delete_later;
