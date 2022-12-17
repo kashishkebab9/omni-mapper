@@ -102,7 +102,6 @@ std::pair<KDNode*, float> KDTree::nearestNeighbor(Eigen::Vector2f input_pt) {
   }
   //we need to unwind and check recursively for any nearer neighbors    
   iter = iter->parent_node;
-  ROS_INFO("Entering Unwind phase");
   while (iter != this->root_node) {
     iter = iter->parent_node;
     float right_child_dist = calcDistance(iter->right_node, input_pt);
@@ -117,8 +116,8 @@ std::pair<KDNode*, float> KDTree::nearestNeighbor(Eigen::Vector2f input_pt) {
     }
   }
 
-  ROS_INFO("Nearest Neighbor Coordinate: [%f, %f]", nearest_neighbor->coordinate[0], nearest_neighbor->coordinate[1]);
-  ROS_INFO("Distance: %f", best_dist);
+  ROS_DEBUG("Nearest Neighbor Coordinate: [%f, %f]", nearest_neighbor->coordinate[0], nearest_neighbor->coordinate[1]);
+  ROS_DEBUG("Distance: %f", best_dist);
   //the above should return us the leaf node associated with this input pt
   auto output = std::make_pair(nearest_neighbor, best_dist);
   return output; 

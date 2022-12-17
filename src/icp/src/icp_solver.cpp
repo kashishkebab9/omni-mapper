@@ -90,8 +90,6 @@ Eigen::Matrix3f icp::solveTransform() {
  // ROS_INFO("x avg trans: %f", meas_t_x_avg - meas_t_minus_1_x_avg);
  // ROS_INFO("y avg trans: %f", meas_t_y_avg - meas_t_minus_1_y_avg);
 
-  float error_threshold = 10; 
-  float error = 1e9;
 
   std::vector<Eigen::Vector2f> t_minus_1_prime = this->make_prime_vec(this->msg_t_minus_1, t_minus_1_centroid); 
   std::vector<Eigen::Vector2f> t_prime = this->make_prime_vec(this->msg_t, t_centroid); 
@@ -100,26 +98,37 @@ Eigen::Matrix3f icp::solveTransform() {
   KDTree tree;
   tree.buildTree(this->msg_t);
 
+  float error_threshold = 100; 
+  float error = 1e9;
 
- // while ( error > error_threshold ) {
-  float tracking_error = 0;
-  for (int i = 0; i < msg_t_minus_1.size(); i++) {
+  float error_placeholder = 1e10;
+  int iter_counter = 0;
+  while ( error > error_threshold && error < error_placeholder && iter_counter < 200 ) {
+    
+    float error_placeholder = error;
+    float tracking_error = 0;
+    for (int i = 0; i < msg_t_minus_1.size(); i++) {
 
-    //TODO: Optimize in the future to be point-to-plane OR introduce feature based sampling methods instead 360-360 comparison
-    auto neighbor = tree.nearestNeighbor(msg_t_minus_1[i]);
-    tracking_error += neighbor.second;
+      //TODO: Optimize in the future to be point-to-plane OR introduce feature based sampling methods instead 360-360 comparison
+      auto neighbor = tree.nearestNeighbor(msg_t_minus_1[i]);
+      tracking_error += neighbor.second;
 
-    W_SVD += t_prime[i] * t_minus_1_prime[i].transpose();
-  } 
-  error = tracking_error;
+      W_SVD += t_prime[i] * t_minus_1_prime[i].transpose();
+    } 
+
+    error = tracking_error;
+    std::cout <<"Tracking_error: " << tracking_error << std::endl;
+    iter_counter++;
+
+ }
   std::cout << "W_SVD: " << std::endl << W_SVD <<std::endl;
   Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_SVD , Eigen::ComputeFullU | Eigen::ComputeFullV);
-
-
-
-
-
-//  }
+  std::cout << "U_SVD: " << std::endl << svd.matrixU() << std::endl;
+  std::cout << "V_SVD: " << std::endl << svd.matrixV() << std::endl;
+  Eigen::Matrix2f R = svd.matrixU() * svd.matrixV().transpose();
+  std::cout << "R: " << std::endl << R << std::endl;
+  std::cout << "Rotation in Z: " << acos(R(0,0)) << std::endl;
+  std::cout << "Rotation in Z: " << acos(R(0,0)) * (180.0/3.141592653589793238463) << std::endl;
 
   Eigen::Matrix3f temp_out_delete_later;
   return temp_out_delete_later;
