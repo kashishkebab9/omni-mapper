@@ -34,13 +34,12 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
 
   std::vector<Eigen::Vector2f> latest_beam_meas;
   for (int i = 0; i < msg.ranges.size(); i++) {
-    //ROS_INFO("Beam [%i]: [%f]", i, msg.ranges[i]);
     // Convert Polar Coordinates to Cartesian:
     float x = msg.ranges[i] * cos(i * (M_PI/180)); 
     float y = msg.ranges[i] * sin(i * (M_PI/180)); 
     Eigen::Vector2f meas(x, y);
     latest_beam_meas.push_back(meas);
-    ROS_INFO("Beam [%i]: [%f], [%f]", i, meas[0], meas[1]);
+    ROS_DEBUG("Beam [%i]: [%f], [%f]", i, meas[0], meas[1]);
   }
   this->msg_t = latest_beam_meas;
 
@@ -88,33 +87,39 @@ Eigen::Matrix3f icp::solveTransform() {
   t_centroid.x() = t_minus_1_centroid.x()/static_cast<float>(this->msg_t.size());
   t_centroid.y() = t_minus_1_centroid.y()/static_cast<float>(this->msg_t.size());
 
-  ROS_DEBUG("x avg trans: %f", meas_t_x_avg - meas_t_minus_1_x_avg);
-  ROS_DEBUG("y avg trans: %f", meas_t_y_avg - meas_t_minus_1_y_avg);
+ // ROS_INFO("x avg trans: %f", meas_t_x_avg - meas_t_minus_1_x_avg);
+ // ROS_INFO("y avg trans: %f", meas_t_y_avg - meas_t_minus_1_y_avg);
 
-  //Eigen::Vector2f nn_test(.45f, -.67f);
-  //tree.nearestNeighbor(nn_test);
-  //set abysmally high error 
   float error_threshold = 10; 
   float error = 1e9;
 
   std::vector<Eigen::Vector2f> t_minus_1_prime = this->make_prime_vec(this->msg_t_minus_1, t_minus_1_centroid); 
   std::vector<Eigen::Vector2f> t_prime = this->make_prime_vec(this->msg_t, t_centroid); 
+
   Eigen::Matrix2f W_SVD;
   KDTree tree;
   tree.buildTree(this->msg_t);
-  while ( error > error_threshold ) {
-    for (int i = 0; i < msg_t_minus_1.size(); i++) {
-      //TODO: Optimize in the future to be point-to-plane OR introduce feature based sampling methods instead 360-360 comparison
-      tree.nearestNeighbor(msg_t_minus_1[i]);
-      W_SVD += t_prime[i] * t_minus_1_prime[i].transpose();
+
+
+ // while ( error > error_threshold ) {
+  float tracking_error = 0;
+  for (int i = 0; i < msg_t_minus_1.size(); i++) {
+
+    //TODO: Optimize in the future to be point-to-plane OR introduce feature based sampling methods instead 360-360 comparison
+    auto neighbor = tree.nearestNeighbor(msg_t_minus_1[i]);
+    tracking_error += neighbor.second;
+
+    W_SVD += t_prime[i] * t_minus_1_prime[i].transpose();
+  } 
+  error = tracking_error;
+  std::cout << "W_SVD: " << std::endl << W_SVD <<std::endl;
+  Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_SVD , Eigen::ComputeFullU | Eigen::ComputeFullV);
 
 
 
 
 
-    } 
-
-  }
+//  }
 
   Eigen::Matrix3f temp_out_delete_later;
   return temp_out_delete_later;
@@ -123,6 +128,7 @@ Eigen::Matrix3f icp::solveTransform() {
 
 std::vector<Eigen::Vector2f> icp::make_prime_vec(std::vector<Eigen::Vector2f> msg, Eigen::Vector2f input_centroid) {
   std::vector<Eigen::Vector2f> prime_vec;
+  ROS_INFO("Making Prime Vec");
   for(size_t i = 0; i < msg.size(); i++) {
     float x = (msg[i]).x() - input_centroid.x();
     float y = (msg[i]).y() - input_centroid.y();
