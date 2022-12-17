@@ -22,7 +22,7 @@ class icp {
     //msg_2 is x_t meas
     std::vector<Eigen::Vector2f> msg_t_minus_1;
     std::vector<Eigen::Vector2f> msg_t;
-    int msg_counter;
+    std::vector<Eigen::Vector2f> make_prime_vec(std::vector<Eigen::Vector2f> msg, Eigen::Vector2f avg);
     //boolean to check if both msg slots are not empty
     bool enough_msgs;
 };
@@ -66,12 +66,10 @@ Eigen::Matrix3f icp::solveTransform() {
 
   float meas_t_minus_1_x_avg = 0; 
   float meas_t_minus_1_y_avg = 0; 
-
   for (auto x : this->msg_t_minus_1) {
     meas_t_minus_1_x_avg += x[0];
     meas_t_minus_1_y_avg += x[1];
   }
-
 
   float meas_t_x_avg = 0; 
   float meas_t_y_avg = 0; 
@@ -90,9 +88,8 @@ Eigen::Matrix3f icp::solveTransform() {
   t_centroid.x() = t_minus_1_centroid.x()/static_cast<float>(this->msg_t.size());
   t_centroid.y() = t_minus_1_centroid.y()/static_cast<float>(this->msg_t.size());
 
-
-  //ROS_INFO("x avg trans: %f", meas_t_x_avg - meas_t_minus_1_x_avg);
-  //ROS_INFO("y avg trans: %f", meas_t_y_avg - meas_t_minus_1_y_avg);
+  ROS_DEBUG("x avg trans: %f", meas_t_x_avg - meas_t_minus_1_x_avg);
+  ROS_DEBUG("y avg trans: %f", meas_t_y_avg - meas_t_minus_1_y_avg);
 
   KDTree tree;
   tree.buildTree(this->msg_t);
@@ -100,9 +97,8 @@ Eigen::Matrix3f icp::solveTransform() {
   //Eigen::Vector2f nn_test(.45f, -.67f);
   //tree.nearestNeighbor(nn_test);
 
-
-  std::vector<Eigen::Vector2f> mean_distance_minus_1;
-  std::vector<Eigen::Vector2f> mean_distance;
+  std::vector<Eigen::Vector2f> t_minus_1_prime = this->make_prime_vec(this->msg_t_minus_1, t_minus_1_centroid); 
+  std::vector<Eigen::Vector2f> t_prime = this->make_prime_vec(this->msg_t, t_centroid); 
 
   //set abysmally high error threshold
   float error_threshold = 10; 
@@ -115,6 +111,7 @@ Eigen::Matrix3f icp::solveTransform() {
       //we need the distance itself from each neighbor
       tree.nearestNeighbor(msg_t_minus_1[i]);
 
+
     } 
 
   }
@@ -122,6 +119,19 @@ Eigen::Matrix3f icp::solveTransform() {
   Eigen::Matrix3f temp_out_delete_later;
   return temp_out_delete_later;
 
+}
+
+std::vector<Eigen::Vector2f> icp::make_prime_vec(std::vector<Eigen::Vector2f> msg, Eigen::Vector2f input_centroid) {
+  std::vector<Eigen::Vector2f> prime_vec;
+  for(size_t i = 0; i < msg.size(); i++) {
+    float x = (msg[i]).x() - input_centroid.x();
+    float y = (msg[i]).y() - input_centroid.y();
+
+    Eigen::Vector2f prime_element;
+    prime_element << x, y;
+    prime_vec.push_back(prime_element);
+  } 
+  return prime_vec;
 }
 
 //-----------------------------------------------------------------------------------------------------------//
