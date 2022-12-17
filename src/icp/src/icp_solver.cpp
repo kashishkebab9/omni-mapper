@@ -91,25 +91,25 @@ Eigen::Matrix3f icp::solveTransform() {
   ROS_DEBUG("x avg trans: %f", meas_t_x_avg - meas_t_minus_1_x_avg);
   ROS_DEBUG("y avg trans: %f", meas_t_y_avg - meas_t_minus_1_y_avg);
 
-  KDTree tree;
-  tree.buildTree(this->msg_t);
-  
   //Eigen::Vector2f nn_test(.45f, -.67f);
   //tree.nearestNeighbor(nn_test);
-
-  std::vector<Eigen::Vector2f> t_minus_1_prime = this->make_prime_vec(this->msg_t_minus_1, t_minus_1_centroid); 
-  std::vector<Eigen::Vector2f> t_prime = this->make_prime_vec(this->msg_t, t_centroid); 
-
-  //set abysmally high error threshold
+  //set abysmally high error 
   float error_threshold = 10; 
   float error = 1e9;
 
+  std::vector<Eigen::Vector2f> t_minus_1_prime = this->make_prime_vec(this->msg_t_minus_1, t_minus_1_centroid); 
+  std::vector<Eigen::Vector2f> t_prime = this->make_prime_vec(this->msg_t, t_centroid); 
+  Eigen::Matrix2f W_SVD;
+  KDTree tree;
+  tree.buildTree(this->msg_t);
   while ( error > error_threshold ) {
     for (int i = 0; i < msg_t_minus_1.size(); i++) {
-      //find the nearest point-to-point neighbor
       //TODO: Optimize in the future to be point-to-plane OR introduce feature based sampling methods instead 360-360 comparison
-      //we need the distance itself from each neighbor
       tree.nearestNeighbor(msg_t_minus_1[i]);
+      W_SVD += t_prime[i] * t_minus_1_prime[i].transpose();
+
+
+
 
 
     } 
