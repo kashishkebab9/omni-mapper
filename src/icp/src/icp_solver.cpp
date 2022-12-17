@@ -79,11 +79,17 @@ Eigen::Matrix3f icp::solveTransform() {
     meas_t_x_avg += x[0];
     meas_t_y_avg += x[1];
   }
+  
+  Eigen::Vector2f t_minus_1_centroid;
+  t_minus_1_centroid << meas_t_minus_1_x_avg, meas_t_minus_1_y_avg;  
+  t_minus_1_centroid.x() = t_minus_1_centroid.x()/static_cast<float>(this->msg_t_minus_1.size());
+  t_minus_1_centroid.y() = t_minus_1_centroid.y()/static_cast<float>(this->msg_t_minus_1.size());
 
-  meas_t_minus_1_x_avg /= msg_t_minus_1.size();
-  meas_t_minus_1_y_avg /= msg_t_minus_1.size();
-  meas_t_x_avg /= msg_t.size();
-  meas_t_y_avg /= msg_t.size();
+  Eigen::Vector2f t_centroid;
+  t_centroid << meas_t_x_avg, meas_t_y_avg;  
+  t_centroid.x() = t_minus_1_centroid.x()/static_cast<float>(this->msg_t.size());
+  t_centroid.y() = t_minus_1_centroid.y()/static_cast<float>(this->msg_t.size());
+
 
   //ROS_INFO("x avg trans: %f", meas_t_x_avg - meas_t_minus_1_x_avg);
   //ROS_INFO("y avg trans: %f", meas_t_y_avg - meas_t_minus_1_y_avg);
@@ -108,9 +114,6 @@ Eigen::Matrix3f icp::solveTransform() {
       //TODO: Optimize in the future to be point-to-plane OR introduce feature based sampling methods instead 360-360 comparison
       //we need the distance itself from each neighbor
       tree.nearestNeighbor(msg_t_minus_1[i]);
-
-
-
 
     } 
 

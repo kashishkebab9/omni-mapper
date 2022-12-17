@@ -7,6 +7,7 @@
 #include <vector>
 #include <eigen3/Eigen/Dense>
 #include <cmath>
+#include <utility>
 
 struct KDNode {
   public:
@@ -21,7 +22,7 @@ class KDTree {
   public:
   KDNode* root_node;
   KDNode* buildTree(std::vector<Eigen::Vector2f> point_set, int depth=0, KDNode * parent_node=NULL);
-  KDNode* nearestNeighbor(Eigen::Vector2f input_pt );
+  std::pair<KDNode*, float> nearestNeighbor(Eigen::Vector2f input_pt );
 
 };
 
@@ -69,7 +70,7 @@ KDNode* KDTree::buildTree(std::vector<Eigen::Vector2f> point_set, int depth, KDN
   return node;
 }
 
-KDNode* KDTree::nearestNeighbor(Eigen::Vector2f input_pt) {
+std::pair<KDNode*, float> KDTree::nearestNeighbor(Eigen::Vector2f input_pt) {
   ROS_DEBUG("Input Point: %f, %f", input_pt[0], input_pt[1]);
   KDNode * iter = this->root_node; 
   KDNode * nearest_neighbor;
@@ -117,7 +118,8 @@ KDNode* KDTree::nearestNeighbor(Eigen::Vector2f input_pt) {
   ROS_DEBUG("Nearest Neighbor Coordinate: [%f, %f]", nearest_neighbor->coordinate[0], nearest_neighbor->coordinate[1]);
   ROS_INFO("Distance: %f", best_dist);
   //the above should return us the leaf node associated with this input pt
-  return nearest_neighbor;
+  auto output = std::make_pair(nearest_neighbor, best_dist);
+  return output; 
 
 }
 
