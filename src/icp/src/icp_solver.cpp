@@ -127,10 +127,11 @@ Eigen::Matrix3f icp::solveTransform() {
   Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_SVD , Eigen::ComputeFullU | Eigen::ComputeFullV);
   std::cout << "U_SVD: " << std::endl << svd.matrixU() << std::endl;
   std::cout << "V_SVD: " << std::endl << svd.matrixV() << std::endl;
-  Eigen::Matrix2f R = svd.matrixU() * svd.matrixV().transpose();
-  std::cout << "R: " << std::endl << R << std::endl;
-  std::cout << "Rotation in Z: " << acos(R(0,0)) << std::endl;
-  std::cout << "Rotation in Z: " << acos(R(0,0)) * (180.0/3.141592653589793238463) << std::endl;
+  Eigen::Matrix2f rotation = svd.matrixU() * svd.matrixV().transpose();
+  std::cout << "R: " << std::endl << rotation << std::endl;
+  Eigen::Vector2f translation = t_centroid - (rotation * t_minus_1_centroid);
+
+
 
 
   Eigen::Matrix3f temp_out_delete_later;
