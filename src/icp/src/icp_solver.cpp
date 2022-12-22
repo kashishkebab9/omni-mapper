@@ -57,11 +57,8 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
 }
 
 Eigen::Matrix3f icp::solveTransform() {
-  //to solve for transformation, we just need to do subtract the averages of the x y coordinates    
-  //calc averages
-  //  [R R][t]  
-  //  [R R][t]
-  //  [0 0  1]
+//********************************************************************************//
+// need to calculate the centroids of both msgs
 
   float meas_t_minus_1_x_avg = 0; 
   float meas_t_minus_1_y_avg = 0; 
@@ -89,9 +86,8 @@ Eigen::Matrix3f icp::solveTransform() {
   t_centroid.x() = t_minus_1_centroid.x()/static_cast<float>(this->msg_t.size());
   t_centroid.y() = t_minus_1_centroid.y()/static_cast<float>(this->msg_t.size());
 
- // ROS_INFO("x avg trans: %f", meas_t_x_avg - meas_t_minus_1_x_avg);
- // ROS_INFO("y avg trans: %f", meas_t_y_avg - meas_t_minus_1_y_avg);
-
+//********************************************************************************//
+// need to find the prime vectors (variance in the matrix) and the nearest neighbors
 
   std::vector<Eigen::Vector2f> t_minus_1_prime = this->make_prime_vec(this->msg_t_minus_1, t_minus_1_centroid); 
   std::vector<Eigen::Vector2f> t_prime = this->make_prime_vec(this->msg_t, t_centroid); 
@@ -100,12 +96,9 @@ Eigen::Matrix3f icp::solveTransform() {
   KDTree tree;
   tree.buildTree(this->msg_t);
 
-  const float error_threshold = 5; 
-  //ISSUE: error doesnt change in while loop?
-  float error_placeholder = 1e10;
-  int iter_counter = 0;
+//********************************************************************************//
+//we need to have an initial solution first to loop through
 
-  //we need to have an initial solution first to loop through
   float initial_error = 0;
   for (int i = 0; i < msg_t_minus_1.size(); i++) {
     auto neighbor = tree.nearestNeighbor(msg_t_minus_1[i]);
@@ -138,6 +131,14 @@ Eigen::Matrix3f icp::solveTransform() {
     transformed_msg_t_minus_1.push_back(transformed_vec);
   }
 
+//********************************************************************************//
+//need to iterate this process:
+
+  const float error_threshold = 5; 
+  //ISSUE: error doesnt change in while loop?
+  float error_placeholder = 1e10;
+  int iter_counter = 0;
+
   while ( error > error_threshold && error < error_placeholder && iter_counter < 200 ) {
     std::cout << "error 1: " << error <<std::endl;
     error_placeholder = error;
@@ -164,12 +165,10 @@ Eigen::Matrix3f icp::solveTransform() {
     error = tracking_error;
     std::cout <<"error: " << error << std::endl;
     iter_counter++;
-
  }
 
   Eigen::Matrix3f temp_out_delete_later;
   return temp_out_delete_later;
-
 }
 
 std::vector<Eigen::Vector2f> icp::make_prime_vec(std::vector<Eigen::Vector2f> msg, Eigen::Vector2f input_centroid) {
@@ -186,13 +185,9 @@ std::vector<Eigen::Vector2f> icp::make_prime_vec(std::vector<Eigen::Vector2f> ms
   return prime_vec;
 }
 
-//-----------------------------------------------------------------------------------------------------------//
-
 int main(int argc, char **argv)
 {
   icp icp_solver;
-
-
   ros::init(argc, argv, "icp_node");
   ros::NodeHandle n;
   ros::Subscriber sub = n.subscribe("scan", 1001, &icp::scanCallback, &icp_solver);
