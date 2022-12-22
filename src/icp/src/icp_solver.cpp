@@ -11,11 +11,16 @@
 
 class icp {
   public:
-    void scanCallback(const sensor_msgs::LaserScan msg);
-    Eigen::Matrix3f solveTransform();
+
     icp() {
       this->enough_msgs=false;
     }
+
+    void scanCallback(const sensor_msgs::LaserScan msg);
+    Eigen::Matrix3f solveTransform();
+    Eigen::Vector2f calculateCentroid(std::vector<Eigen::Vector2f> input_set);
+    
+
 
   private:
     //msg 1 is x_t-1 meas
@@ -56,35 +61,29 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
     
 }
 
+Eigen::Vector2f icp::calculateCentroid(std::vector<Eigen::Vector2f> input_set) {
+  float avg_x = 0;
+  float avg_y = 0;
+
+  for (auto i: input_set) {
+    avg_x += i.x(); 
+    avg_y += i.y();
+  }
+
+  avg_x = avg_x/static_cast<float>(input_set.size());
+  avg_y = avg_y/static_cast<float>(input_set.size());
+
+  Eigen::Vector2f output;
+  output << avg_x, avg_y;
+  return output;
+}
+
 Eigen::Matrix3f icp::solveTransform() {
 //********************************************************************************//
 // need to calculate the centroids of both msgs
-
-  float meas_t_minus_1_x_avg = 0; 
-  float meas_t_minus_1_y_avg = 0; 
-  for (auto x : this->msg_t_minus_1) {
-    meas_t_minus_1_x_avg += x[0];
-    meas_t_minus_1_y_avg += x[1];
-  }
-
-  float meas_t_x_avg = 0; 
-  float meas_t_y_avg = 0; 
-  for (auto x : this->msg_t) {
-    meas_t_x_avg += x[0];
-    meas_t_y_avg += x[1];
-  }
   
-  Eigen::Vector2f t_minus_1_centroid;
-  t_minus_1_centroid << meas_t_minus_1_x_avg, meas_t_minus_1_y_avg;  
-  t_minus_1_centroid.x() = t_minus_1_centroid.x()/static_cast<float>(this->msg_t_minus_1.size());
-  std::cout << "Minus 1 X Centroid: " << t_minus_1_centroid.x() << std::endl;
-  std::cout << "Minus 1 Y Centroid: " << t_minus_1_centroid.y() << std::endl;
-  t_minus_1_centroid.y() = t_minus_1_centroid.y()/static_cast<float>(this->msg_t_minus_1.size());
-
-  Eigen::Vector2f t_centroid;
-  t_centroid << meas_t_x_avg, meas_t_y_avg;  
-  t_centroid.x() = t_minus_1_centroid.x()/static_cast<float>(this->msg_t.size());
-  t_centroid.y() = t_minus_1_centroid.y()/static_cast<float>(this->msg_t.size());
+  Eigen::Vector2f t_minus_1_centroid = this->calculateCentroid(this->msg_t_minus_1);
+  Eigen::Vector2f t_centroid = this->calculateCentroid(this->msg_t);
 
 //********************************************************************************//
 // need to find the prime vectors (variance in the matrix) and the nearest neighbors
@@ -106,6 +105,11 @@ Eigen::Matrix3f icp::solveTransform() {
     W_SVD += t_prime[i] * t_minus_1_prime[i].transpose();
   } 
   float error = initial_error;
+
+  //just to verify we are not crazy:
+  std::cout << "initial_error variable: " << initial_error << std::endl;
+  std::cout << "error variable: " << error << std::endl;
+
   Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_SVD , Eigen::ComputeFullU | Eigen::ComputeFullV);
 
   std::cout << "Initial W_SVD: " << std::endl << W_SVD <<std::endl;
@@ -118,8 +122,8 @@ Eigen::Matrix3f icp::solveTransform() {
   transformation.setIdentity();
   transformation.block<2,2>(0,0) = rotation;
   transformation.block<2,1>(2,0) = translation;
+
   //we need to apply this tranformation to the msg_t_minus_1:
-  //3x3 * 3x1 = 3x1
   std::vector<Eigen::Vector3f> transformed_msg_t_minus_1;
   for (size_t i = 0; i < msg_t_minus_1.size(); i++) {
     //formulate the homogenous version of the ith 2d vector in msg_t_minus_1:
@@ -131,41 +135,6 @@ Eigen::Matrix3f icp::solveTransform() {
     transformed_msg_t_minus_1.push_back(transformed_vec);
   }
 
-//********************************************************************************//
-//need to iterate this process:
-
-  const float error_threshold = 5; 
-  //ISSUE: error doesnt change in while loop?
-  float error_placeholder = 1e10;
-  int iter_counter = 0;
-
-  while ( error > error_threshold && error < error_placeholder && iter_counter < 200 ) {
-    std::cout << "error 1: " << error <<std::endl;
-    error_placeholder = error;
-    std::cout << "error_placeholder" <<  error_placeholder  << std::endl;
-    float tracking_error = 0;
-    for (int i = 0; i < msg_t_minus_1.size(); i++) {
-      auto neighbor = tree.nearestNeighbor(msg_t_minus_1[i]);
-      tracking_error += neighbor.second;
-      W_SVD += t_prime[i] * t_minus_1_prime[i].transpose();
-    } 
-
-    std::cout << "W_SVD: " << std::endl << W_SVD <<std::endl;
-    Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_SVD , Eigen::ComputeFullU | Eigen::ComputeFullV);
-    std::cout << "U_SVD: " << std::endl << svd.matrixU() << std::endl;
-    std::cout << "V_SVD: " << std::endl << svd.matrixV() << std::endl;
-
-    Eigen::Matrix2f rotation = svd.matrixU() * svd.matrixV().transpose();
-    Eigen::Vector2f translation = t_centroid - (rotation * t_minus_1_centroid);
-    Eigen::Matrix3f transformation;
-    transformation.setIdentity();
-    transformation.block<2,2>(0,0) = rotation;
-    transformation.block<2,1>(2,0) = translation;
-
-    error = tracking_error;
-    std::cout <<"error: " << error << std::endl;
-    iter_counter++;
- }
 
   Eigen::Matrix3f temp_out_delete_later;
   return temp_out_delete_later;
