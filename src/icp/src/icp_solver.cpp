@@ -102,10 +102,42 @@ Eigen::Matrix3f icp::solveTransform() {
 
   const float error_threshold = 5; 
   //ISSUE: error doesnt change in while loop?
-  float error = 1e9;
-
   float error_placeholder = 1e10;
   int iter_counter = 0;
+
+  //we need to have an initial solution first to loop through
+  float initial_error = 0;
+  for (int i = 0; i < msg_t_minus_1.size(); i++) {
+    auto neighbor = tree.nearestNeighbor(msg_t_minus_1[i]);
+    initial_error += neighbor.second;
+    W_SVD += t_prime[i] * t_minus_1_prime[i].transpose();
+  } 
+  float error = initial_error;
+  Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_SVD , Eigen::ComputeFullU | Eigen::ComputeFullV);
+
+  std::cout << "Initial W_SVD: " << std::endl << W_SVD <<std::endl;
+  std::cout << "Initial U_SVD: " << std::endl << svd.matrixU() << std::endl;
+  std::cout << "Initial V_SVD: " << std::endl << svd.matrixV() << std::endl;
+
+  Eigen::Matrix2f rotation = svd.matrixU() * svd.matrixV().transpose();
+  Eigen::Vector2f translation = t_centroid - (rotation * t_minus_1_centroid);
+  Eigen::Matrix3f transformation;
+  transformation.setIdentity();
+  transformation.block<2,2>(0,0) = rotation;
+  transformation.block<2,1>(2,0) = translation;
+  //we need to apply this tranformation to the msg_t_minus_1:
+  //3x3 * 3x1 = 3x1
+  std::vector<Eigen::Vector3f> transformed_msg_t_minus_1;
+  for (size_t i = 0; i < msg_t_minus_1.size(); i++) {
+    //formulate the homogenous version of the ith 2d vector in msg_t_minus_1:
+    Eigen::Vector3f homogenous_2f;
+    homogenous_2f << msg_t_minus_1[i].x(), msg_t_minus_1[i].y(), 1;
+    //apply the transform:
+    Eigen::Vector3f transformed_vec;
+    transformed_vec = transformation * homogenous_2f; 
+    transformed_msg_t_minus_1.push_back(transformed_vec);
+  }
+
   while ( error > error_threshold && error < error_placeholder && iter_counter < 200 ) {
     std::cout << "error 1: " << error <<std::endl;
     error_placeholder = error;
@@ -117,22 +149,23 @@ Eigen::Matrix3f icp::solveTransform() {
       W_SVD += t_prime[i] * t_minus_1_prime[i].transpose();
     } 
 
+    std::cout << "W_SVD: " << std::endl << W_SVD <<std::endl;
+    Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_SVD , Eigen::ComputeFullU | Eigen::ComputeFullV);
+    std::cout << "U_SVD: " << std::endl << svd.matrixU() << std::endl;
+    std::cout << "V_SVD: " << std::endl << svd.matrixV() << std::endl;
+
+    Eigen::Matrix2f rotation = svd.matrixU() * svd.matrixV().transpose();
+    Eigen::Vector2f translation = t_centroid - (rotation * t_minus_1_centroid);
+    Eigen::Matrix3f transformation;
+    transformation.setIdentity();
+    transformation.block<2,2>(0,0) = rotation;
+    transformation.block<2,1>(2,0) = translation;
+
     error = tracking_error;
     std::cout <<"error: " << error << std::endl;
     iter_counter++;
 
  }
-
-  std::cout << "W_SVD: " << std::endl << W_SVD <<std::endl;
-  Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_SVD , Eigen::ComputeFullU | Eigen::ComputeFullV);
-  std::cout << "U_SVD: " << std::endl << svd.matrixU() << std::endl;
-  std::cout << "V_SVD: " << std::endl << svd.matrixV() << std::endl;
-  Eigen::Matrix2f rotation = svd.matrixU() * svd.matrixV().transpose();
-  std::cout << "R: " << std::endl << rotation << std::endl;
-  Eigen::Vector2f translation = t_centroid - (rotation * t_minus_1_centroid);
-
-
-
 
   Eigen::Matrix3f temp_out_delete_later;
   return temp_out_delete_later;
