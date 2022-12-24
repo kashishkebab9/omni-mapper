@@ -76,6 +76,8 @@ Eigen::Vector2f icp::calculateCentroid(std::vector<Eigen::Vector2f> input_set) {
   return output;
 }
 
+
+//********************************************************************************//
 Eigen::Matrix3f icp::solveTransform() {
 // msg_t operations:  
   Eigen::Vector2f t_centroid = this->calculateCentroid(this->msg_t);
@@ -96,9 +98,7 @@ Eigen::Matrix3f icp::solveTransform() {
   } 
   float error = initial_error;
 
-  //just to verify we are not crazy:
-  std::cout << "initial_error variable: " << initial_error << std::endl;
-  std::cout << "error variable: " << error << std::endl;
+  std::cout << "error: " << error << std::endl;
 
   Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_SVD , Eigen::ComputeFullU | Eigen::ComputeFullV);
 
@@ -111,10 +111,13 @@ Eigen::Matrix3f icp::solveTransform() {
   Eigen::Matrix3f transformation;
   transformation.setIdentity();
   transformation.block<2,2>(0,0) = rotation;
-  transformation.block<2,1>(2,0) = translation;
+  std::cout << "translation: " << translation << std::endl;
+  transformation.block<1,2>(2,0) = translation;
+  
 
   //we need to apply this tranformation to the msg_t_minus_1:
-  std::vector<Eigen::Vector2f> transformed_msg_t_minus_1;
+  std::vector<Eigen::Vector2f> transformed_msg_iteration;
+  Eigen::Matrix3f final_transformation; 
   for (size_t i = 0; i < msg_t_minus_1.size(); i++) {
     //formulate the homogenous version of the ith 2d vector in msg_t_minus_1:
     Eigen::Vector3f homogenous_2f;
@@ -124,21 +127,28 @@ Eigen::Matrix3f icp::solveTransform() {
     transformed_vec = transformation * homogenous_2f; 
     Eigen::Vector2f transformed_vec_2f;
     transformed_vec_2f << transformed_vec.x(), transformed_vec.y();
-    transformed_msg_t_minus_1.push_back(transformed_vec_2f);
+    transformed_msg_iteration.push_back(transformed_vec_2f);
   }
+  final_transformation = transformation;
 
-  float error_threshold = 5;
-  float error_placeholder = error + 1.0;
-  while (error > error_threshold && error < error_placeholder) {
+//********************************************************************************//
+  float error_threshold = 3.5;
+  float error_placeholder = error;
+  int iteration_counter =0;
 
-    Eigen::Vector2f transformed_centroid = this->calculateCentroid(transformed_msg_t_minus_1);
-    std::vector<Eigen::Vector2f> transformed_prime = this->make_prime_vec(transformed_msg_t_minus_1, transformed_centroid); 
+  while (error > error_threshold   && iteration_counter < 20 ) {
+
+    std::cout << "iteration count: " << iteration_counter <<std::endl;
+    std::cout << "error: " << error << std::endl; 
+    std::cout << "error_placeholder: " << error_placeholder << std::endl; 
+    Eigen::Vector2f transformed_centroid = this->calculateCentroid(transformed_msg_iteration);
+    std::vector<Eigen::Vector2f> transformed_prime = this->make_prime_vec(transformed_msg_iteration, transformed_centroid); 
 
     Eigen::Matrix2f W_SVD_loop;
 
     float tracking_error = 0;
-    for (int i = 0; i < transformed_msg_t_minus_1.size(); i++) {
-      auto neighbor = tree.nearestNeighbor(transformed_msg_t_minus_1[i]);
+    for (int i = 0; i < transformed_msg_iteration.size(); i++) {
+      auto neighbor = tree.nearestNeighbor(transformed_msg_iteration[i]);
       tracking_error += neighbor.second;
       W_SVD_loop += t_prime[i] * transformed_prime[i].transpose();
     } 
@@ -156,29 +166,34 @@ Eigen::Matrix3f icp::solveTransform() {
     Eigen::Matrix3f transformation;
     transformation.setIdentity();
     transformation.block<2,2>(0,0) = rotation;
-    transformation.block<2,1>(2,0) = translation;
+    transformation.block<1,2>(2,0) = translation;
 
     //we need to apply this tranformation to the msg_t_minus_1:
-    std::vector<Eigen::Vector2f> transformed_msg_t_minus_1_placeholder;
-    for (size_t i = 0; i < transformed_msg_t_minus_1.size(); i++) {
+    std::vector<Eigen::Vector2f> transformed_msg_iteration_placeholder;
+    for (size_t i = 0; i < transformed_msg_iteration.size(); i++) {
       //formulate the homogenous version of the ith 2d vector in msg_t_minus_1:
       Eigen::Vector3f homogenous_3f;
-      homogenous_3f << transformed_msg_t_minus_1[i].x(), transformed_msg_t_minus_1[i].y(), 1;
+      homogenous_3f << transformed_msg_iteration[i].x(), transformed_msg_iteration[i].y(), 1;
       //apply the transform:
       Eigen::Vector3f transformed_vec;
       transformed_vec = transformation * homogenous_3f; 
       Eigen::Vector2f transformed_vec_2f; 
       transformed_vec_2f << transformed_vec.x(), transformed_vec.y();
-      transformed_msg_t_minus_1_placeholder.push_back(transformed_vec_2f);
+      transformed_msg_iteration_placeholder.push_back(transformed_vec_2f);
     }
 
-    transformed_msg_t_minus_1.clear();
-    transformed_msg_t_minus_1 = transformed_msg_t_minus_1_placeholder;
-    transformed_msg_t_minus_1_placeholder.clear();
-  }
+    final_transformation *= transformation;
 
-  Eigen::Matrix3f temp_out_delete_later;
-  return temp_out_delete_later;
+    transformed_msg_iteration.clear();
+    transformed_msg_iteration = transformed_msg_iteration_placeholder;
+    transformed_msg_iteration_placeholder.clear();
+    iteration_counter++;
+    error_placeholder = error;
+    std::cout << "end error: " << error << std::endl;
+  }
+  std::cout << "final transform: " << std::endl << final_transformation << std::endl;
+
+  return final_transformation;
 }
 
 std::vector<Eigen::Vector2f> icp::make_prime_vec(std::vector<Eigen::Vector2f> msg, Eigen::Vector2f input_centroid) {
