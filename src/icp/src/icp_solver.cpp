@@ -5,6 +5,8 @@
 #include "std_msgs/String.h"
 #include <sensor_msgs/LaserScan.h>
 #include <vector>
+#include <experimental/optional>
+#include <functional>
 #include <eigen3/Eigen/Dense>
 #include <cmath>
 #include "KDTree.h"
@@ -17,7 +19,7 @@ class icp {
     }
 
     void scanCallback(const sensor_msgs::LaserScan msg);
-    Eigen::Matrix3f solveTransform();
+    std::experimental::optional<Eigen::Matrix3f> solveTransform();
     Eigen::Vector2f calculateCentroid(std::vector<Eigen::Vector2f> input_set);
   
   private:
@@ -78,7 +80,7 @@ Eigen::Vector2f icp::calculateCentroid(std::vector<Eigen::Vector2f> input_set) {
 
 
 //********************************************************************************//
-Eigen::Matrix3f icp::solveTransform() {
+std::experimental::optional<Eigen::Matrix3f> icp::solveTransform() {
 // msg_t operations:  
   Eigen::Vector2f t_centroid = this->calculateCentroid(this->msg_t);
   KDTree tree;
@@ -141,6 +143,7 @@ Eigen::Matrix3f icp::solveTransform() {
     std::cout << "iteration count: " << iteration_counter <<std::endl;
     std::cout << "error: " << error << std::endl; 
     std::cout << "error_placeholder: " << error_placeholder << std::endl; 
+    error_placeholder = error;
     Eigen::Vector2f transformed_centroid = this->calculateCentroid(transformed_msg_iteration);
     std::vector<Eigen::Vector2f> transformed_prime = this->make_prime_vec(transformed_msg_iteration, transformed_centroid); 
 
@@ -155,13 +158,13 @@ Eigen::Matrix3f icp::solveTransform() {
 
     error = tracking_error;
 
-    Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_SVD_loop , Eigen::ComputeFullU | Eigen::ComputeFullV);
+    Eigen::JacobiSVD<Eigen::Matrix2f> svd_loop(W_SVD_loop , Eigen::ComputeFullU | Eigen::ComputeFullV);
 
     std::cout << "W_SVD: " << std::endl << W_SVD_loop <<std::endl;
-    std::cout << "U_SVD: " << std::endl << svd.matrixU() << std::endl;
-    std::cout << "V_SVD: " << std::endl << svd.matrixV() << std::endl;
+    std::cout << "U_SVD: " << std::endl << svd_loop.matrixU() << std::endl;
+    std::cout << "V_SVD: " << std::endl << svd_loop.matrixV() << std::endl;
 
-    Eigen::Matrix2f rotation = svd.matrixU() * svd.matrixV().transpose();
+    Eigen::Matrix2f rotation = svd_loop.matrixU() * svd_loop.matrixV().transpose();
     Eigen::Vector2f translation = t_centroid - (rotation * t_minus_1_centroid);
     Eigen::Matrix3f transformation;
     transformation.setIdentity();
@@ -188,12 +191,15 @@ Eigen::Matrix3f icp::solveTransform() {
     transformed_msg_iteration = transformed_msg_iteration_placeholder;
     transformed_msg_iteration_placeholder.clear();
     iteration_counter++;
-    error_placeholder = error;
     std::cout << "end error: " << error << std::endl;
   }
-  std::cout << "final transform: " << std::endl << final_transformation << std::endl;
 
-  return final_transformation;
+  if (error < 6.0) {
+    std::cout << "Rotation: " << acos(final_transformation(0,0));
+    std::cout << "final transform: " << std::endl << final_transformation << std::endl;
+    return final_transformation;
+  } 
+  ROS_WARN("Error is too high! Throwing away this dataset");
 }
 
 std::vector<Eigen::Vector2f> icp::make_prime_vec(std::vector<Eigen::Vector2f> msg, Eigen::Vector2f input_centroid) {
