@@ -162,12 +162,14 @@ Eigen::Matrix3f icp::solveTransform() {
     std::vector<Eigen::Vector2f> transformed_msg_t_minus_1_placeholder;
     for (size_t i = 0; i < transformed_msg_t_minus_1.size(); i++) {
       //formulate the homogenous version of the ith 2d vector in msg_t_minus_1:
-      Eigen::Vector3f homogenous_2f;
+      Eigen::Vector3f homogenous_3f;
       homogenous_3f << transformed_msg_t_minus_1[i].x(), transformed_msg_t_minus_1[i].y(), 1;
       //apply the transform:
       Eigen::Vector3f transformed_vec;
       transformed_vec = transformation * homogenous_3f; 
-      transformed_msg_t_minus_1_placeholder.push_back(transformed_vec);
+      Eigen::Vector2f transformed_vec_2f; 
+      transformed_vec_2f << transformed_vec.x(), transformed_vec.y();
+      transformed_msg_t_minus_1_placeholder.push_back(transformed_vec_2f);
     }
 
     transformed_msg_t_minus_1.clear();
