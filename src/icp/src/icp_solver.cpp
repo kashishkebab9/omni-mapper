@@ -57,8 +57,6 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
   if(this->enough_msgs) {
     this->solveTransform();
   }
-
-    
 }
 
 Eigen::Vector2f icp::calculateCentroid(std::vector<Eigen::Vector2f> input_set) {
@@ -66,8 +64,10 @@ Eigen::Vector2f icp::calculateCentroid(std::vector<Eigen::Vector2f> input_set) {
   float avg_y = 0;
 
   for (auto i: input_set) {
-    avg_x += i.x(); 
-    avg_y += i.y();
+    if (i.x() != 0 && i.y() != 0 && i.x() !=-0 && i.y() != 0 ) {
+      avg_x += i.x(); 
+      avg_y += i.y();
+    }
   }
 
   avg_x = avg_x/static_cast<float>(input_set.size());
@@ -91,17 +91,19 @@ std::experimental::optional<Eigen::Matrix3f> icp::solveTransform() {
   Eigen::Vector2f t_minus_1_centroid = this->calculateCentroid(this->msg_t_minus_1);
   std::vector<Eigen::Vector2f> t_minus_1_prime = this->make_prime_vec(this->msg_t_minus_1, t_minus_1_centroid); 
 
+  float error = 0;
+
   Eigen::Matrix2f W_SVD;
-  float initial_error = 0;
   for (int i = 0; i < msg_t_minus_1.size(); i++) {
     auto neighbor = tree.nearestNeighbor(msg_t_minus_1[i]);
-    initial_error += neighbor.second;
+    //pt to pt distance:
+    error += neighbor.second;
+
+    // 2 by 1 times 1 by 2 == 2 by 2
     W_SVD += t_prime[i] * t_minus_1_prime[i].transpose();
   } 
-  float error = initial_error;
 
   std::cout << "error: " << error << std::endl;
-
   Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_SVD , Eigen::ComputeFullU | Eigen::ComputeFullV);
 
   std::cout << "Initial W_SVD: " << std::endl << W_SVD <<std::endl;
@@ -109,54 +111,61 @@ std::experimental::optional<Eigen::Matrix3f> icp::solveTransform() {
   std::cout << "Initial V_SVD: " << std::endl << svd.matrixV() << std::endl;
 
   Eigen::Matrix2f rotation = svd.matrixU() * svd.matrixV().transpose();
+  // 2 by 2 times 2 by 1  == 2 by 1
+  // 2 by 1 minus 2 by 1
   Eigen::Vector2f translation = t_centroid - (rotation * t_minus_1_centroid);
   Eigen::Matrix3f transformation;
   transformation.setIdentity();
   transformation.block<2,2>(0,0) = rotation;
   std::cout << "translation: " << translation << std::endl;
   transformation.block<1,2>(2,0) = translation;
-  
 
   //we need to apply this tranformation to the msg_t_minus_1:
   std::vector<Eigen::Vector2f> transformed_msg_iteration;
   Eigen::Matrix3f final_transformation; 
   for (size_t i = 0; i < msg_t_minus_1.size(); i++) {
+//    std::cout << "point number: " << i << std::endl;
+//    std::cout << "point x: " << msg_t_minus_1[i].x() << std::endl;
+//    std::cout << "point y: " << msg_t_minus_1[i].y() << std::endl;
     //formulate the homogenous version of the ith 2d vector in msg_t_minus_1:
-    Eigen::Vector3f homogenous_2f;
-    homogenous_2f << msg_t_minus_1[i].x(), msg_t_minus_1[i].y(), 1;
+    Eigen::Vector3f homogenous_3f;
+    homogenous_3f << msg_t_minus_1[i].x(), msg_t_minus_1[i].y(), 1;
     //apply the transform:
     Eigen::Vector3f transformed_vec;
-    transformed_vec = transformation * homogenous_2f; 
+    transformed_vec = transformation * homogenous_3f; 
     Eigen::Vector2f transformed_vec_2f;
     transformed_vec_2f << transformed_vec.x(), transformed_vec.y();
+//    std::cout << "transformed x: " << transformed_vec.x() << std::endl;
+//    std::cout << "transformed y: " << transformed_vec.y() << std::endl;
     transformed_msg_iteration.push_back(transformed_vec_2f);
   }
   final_transformation = transformation;
 
 //********************************************************************************//
   float error_threshold = 3.5;
-  float error_placeholder = error;
+  float error_placeholder = error+ 1.0;
   int iteration_counter =0;
 
-  while (error > error_threshold   && iteration_counter < 20 ) {
+  while (error > error_threshold && error <= error_placeholder && iteration_counter < 10 ) {
+    ROS_INFO("In the while loop!");
 
     std::cout << "iteration count: " << iteration_counter <<std::endl;
     std::cout << "error: " << error << std::endl; 
     std::cout << "error_placeholder: " << error_placeholder << std::endl; 
+
     error_placeholder = error;
     Eigen::Vector2f transformed_centroid = this->calculateCentroid(transformed_msg_iteration);
     std::vector<Eigen::Vector2f> transformed_prime = this->make_prime_vec(transformed_msg_iteration, transformed_centroid); 
 
     Eigen::Matrix2f W_SVD_loop;
 
-    float tracking_error = 0;
+    error = 0;
     for (int i = 0; i < transformed_msg_iteration.size(); i++) {
       auto neighbor = tree.nearestNeighbor(transformed_msg_iteration[i]);
-      tracking_error += neighbor.second;
+      error += neighbor.second;
       W_SVD_loop += t_prime[i] * transformed_prime[i].transpose();
     } 
-
-    error = tracking_error;
+    std::cout << "error after tree distance for loop: " << error << std::endl;
 
     Eigen::JacobiSVD<Eigen::Matrix2f> svd_loop(W_SVD_loop , Eigen::ComputeFullU | Eigen::ComputeFullV);
 
@@ -164,12 +173,12 @@ std::experimental::optional<Eigen::Matrix3f> icp::solveTransform() {
     std::cout << "U_SVD: " << std::endl << svd_loop.matrixU() << std::endl;
     std::cout << "V_SVD: " << std::endl << svd_loop.matrixV() << std::endl;
 
-    Eigen::Matrix2f rotation = svd_loop.matrixU() * svd_loop.matrixV().transpose();
-    Eigen::Vector2f translation = t_centroid - (rotation * t_minus_1_centroid);
-    Eigen::Matrix3f transformation;
-    transformation.setIdentity();
-    transformation.block<2,2>(0,0) = rotation;
-    transformation.block<1,2>(2,0) = translation;
+    Eigen::Matrix2f rotation_loop = svd_loop.matrixU() * svd_loop.matrixV().transpose();
+    Eigen::Vector2f translation_loop = t_centroid - (rotation_loop * t_minus_1_centroid);
+    Eigen::Matrix3f transformation_loop;
+    transformation_loop.setIdentity();
+    transformation_loop.block<2,2>(0,0) = rotation_loop;
+    transformation_loop.block<1,2>(2,0) = translation_loop;
 
     //we need to apply this tranformation to the msg_t_minus_1:
     std::vector<Eigen::Vector2f> transformed_msg_iteration_placeholder;
@@ -179,13 +188,13 @@ std::experimental::optional<Eigen::Matrix3f> icp::solveTransform() {
       homogenous_3f << transformed_msg_iteration[i].x(), transformed_msg_iteration[i].y(), 1;
       //apply the transform:
       Eigen::Vector3f transformed_vec;
-      transformed_vec = transformation * homogenous_3f; 
+      transformed_vec = transformation_loop * homogenous_3f; 
       Eigen::Vector2f transformed_vec_2f; 
       transformed_vec_2f << transformed_vec.x(), transformed_vec.y();
       transformed_msg_iteration_placeholder.push_back(transformed_vec_2f);
     }
 
-    final_transformation *= transformation;
+    final_transformation = transformation_loop * final_transformation;
 
     transformed_msg_iteration.clear();
     transformed_msg_iteration = transformed_msg_iteration_placeholder;
@@ -194,7 +203,7 @@ std::experimental::optional<Eigen::Matrix3f> icp::solveTransform() {
     std::cout << "end error: " << error << std::endl;
   }
 
-  if (error < 6.0) {
+  if (error < 9.0) {
     std::cout << "Rotation: " << acos(final_transformation(0,0));
     std::cout << "final transform: " << std::endl << final_transformation << std::endl;
     return final_transformation;
