@@ -123,7 +123,13 @@ std::experimental::optional<Eigen::Matrix3f> icp::solveTransform() {
   //we need to apply this tranformation to the msg_t_minus_1:
   std::vector<Eigen::Vector2f> transformed_msg_iteration;
   Eigen::Matrix3f final_transformation; 
-  for (size_t i = 0; i < msg_t_minus_1.size(); i++) {
+  size_t neighbor_size;
+  if (this->msg_t_minus_1.size() > this->msg_t.size()) {
+    neighbor_size = this->msg_t.size();
+  } else {
+    neighbor_size = this->msg_t_minus_1.size();
+  }
+  for (size_t i = 0; i < neighbor_size; i++) {
 //    std::cout << "point number: " << i << std::endl;
 //    std::cout << "point x: " << msg_t_minus_1[i].x() << std::endl;
 //    std::cout << "point y: " << msg_t_minus_1[i].y() << std::endl;
@@ -160,7 +166,15 @@ std::experimental::optional<Eigen::Matrix3f> icp::solveTransform() {
     Eigen::Matrix2f W_SVD_loop;
 
     error = 0;
-    for (int i = 0; i < transformed_msg_iteration.size(); i++) {
+    size_t neighbor_index_size;
+
+    if (transformed_msg_iteration.size() > this->msg_t.size()) {
+      neighbor_index_size = this->msg_t.size();
+    } else {
+      neighbor_index_size = transformed_msg_iteration.size();
+    }
+
+    for (int i = 0; i < neighbor_index_size; i++) {
       auto neighbor = tree.nearestNeighbor(transformed_msg_iteration[i]);
       error += neighbor.second;
       W_SVD_loop += t_prime[i] * transformed_prime[i].transpose();
@@ -215,12 +229,14 @@ std::vector<Eigen::Vector2f> icp::make_prime_vec(std::vector<Eigen::Vector2f> ms
   std::vector<Eigen::Vector2f> prime_vec;
   ROS_INFO("Making Prime Vec");
   for(size_t i = 0; i < msg.size(); i++) {
-    float x = (msg[i]).x() - input_centroid.x();
-    float y = (msg[i]).y() - input_centroid.y();
+    if (msg[i].x() != 0 && msg[i].y() != -0 && msg[i].y() != 0 && msg[i].y() != -0) {
+      float x = (msg[i]).x() - input_centroid.x();
+      float y = (msg[i]).y() - input_centroid.y();
 
-    Eigen::Vector2f prime_element;
-    prime_element << x, y;
-    prime_vec.push_back(prime_element);
+      Eigen::Vector2f prime_element;
+      prime_element << x, y;
+      prime_vec.push_back(prime_element);
+    }
   } 
   return prime_vec;
 }
