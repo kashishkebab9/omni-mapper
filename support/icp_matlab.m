@@ -81,7 +81,7 @@ for i = 1:size_t_minus_1
     index = Idx(i)
     plot( [msg_t_minus_1_x(i), msg_t_x(index)], [msg_t_minus_1_y(i), msg_t_y(index)] )
 end
-hold off
+
 
 if (size_t > size_t_minus_1)
     multiplication_iterations = size_t_minus_1
@@ -116,13 +116,23 @@ Trans(3,1) = 0;
 Trans(3,2) = 0;
 Trans(3,3) = 1;
 Trans
+size(Trans)
 
-msg_t_minus_1 = [msg_t_minus_1_x(:), msg_t_minus_1_y(:), 1]
+
+msg_t_minus_1 = [msg_t_minus_1_x(:), msg_t_minus_1_y(:)];
+col_of_1s = ones(size_t_minus_1, 1);
+msg_t_minus_1 = [msg_t_minus_1 col_of_1s];
+size(msg_t_minus_1(2,:).')
+
 for j = 1:size_t_minus_1
-    trans_msg(j) = Trans * msg_t_minus_1(j);
+    %size(msg_t_minus_1(j,:).')
+    trans_msg(j,:) = Trans * msg_t_minus_1(j,:).';
+    
 end
 
-trans_msg
+plot(trans_msg(:,1), trans_msg(:,2), '.k')
+hold off
+
         
     
 
