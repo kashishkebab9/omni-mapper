@@ -48,6 +48,7 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
   }
   this->msg_t = latest_beam_meas;
 
+
   if (!this->enough_msgs) {
     if(!msg_t_minus_1.size() == 0) {
       this->enough_msgs = true;
@@ -55,6 +56,27 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
   }
 
   if(this->enough_msgs) {
+    std::cout << "msg_t x:" << std::endl;
+    for (int i = 0; i < this->msg_t.size(); i++) {
+      std::cout << msg_t[i].x() << ", ";
+    }
+    std::cout <<std::endl;
+    std::cout << "msg_t y:" << std::endl;
+    for (int i = 0; i < this->msg_t.size(); i++) {
+      std::cout << msg_t[i].y() << ", ";
+    }
+    std::cout <<std::endl;
+
+    std::cout << "msg_t_minus_1 x:" << std::endl;
+    for (int i = 0; i < this->msg_t_minus_1.size(); i++) {
+      std::cout << msg_t_minus_1[i].x() << ", ";
+    }
+    std::cout <<std::endl;
+    std::cout << "msg_t_minus_1 y:" << std::endl;
+    for (int i = 0; i < this->msg_t_minus_1.size(); i++) {
+      std::cout << msg_t_minus_1[i].y() << ", ";
+    }
+    std::cout <<std::endl;
     this->solveTransform();
   }
 }
@@ -91,6 +113,8 @@ std::experimental::optional<Eigen::Matrix3f> icp::solveTransform() {
   Eigen::Vector2f t_minus_1_centroid = this->calculateCentroid(this->msg_t_minus_1);
   std::vector<Eigen::Vector2f> t_minus_1_prime = this->make_prime_vec(this->msg_t_minus_1, t_minus_1_centroid); 
 
+  std::cout << "t_minus_1_centroid: " << t_minus_1_centroid << std::endl;
+  std::cout << "t_centoid: " << t_centroid << std::endl;
   float error = 0;
 
   Eigen::Matrix2f W_SVD;
@@ -118,7 +142,7 @@ std::experimental::optional<Eigen::Matrix3f> icp::solveTransform() {
   transformation.setIdentity();
   transformation.block<2,2>(0,0) = rotation;
   std::cout << "translation: " << translation << std::endl;
-  transformation.block<1,2>(2,0) = translation;
+  transformation.block<2,1>(0,2) = translation;
 
   //we need to apply this tranformation to the msg_t_minus_1:
   std::vector<Eigen::Vector2f> transformed_msg_iteration;
@@ -154,7 +178,6 @@ std::experimental::optional<Eigen::Matrix3f> icp::solveTransform() {
 
   while (error > error_threshold && error <= error_placeholder && iteration_counter < 10 ) {
     ROS_INFO("In the while loop!");
-
     std::cout << "iteration count: " << iteration_counter <<std::endl;
     std::cout << "error: " << error << std::endl; 
     std::cout << "error_placeholder: " << error_placeholder << std::endl; 
