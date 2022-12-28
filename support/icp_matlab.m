@@ -41,7 +41,6 @@ centroid_t_minus_1_x = centroid_t_minus_1_x / size_t_minus_1;
 centroid_t_minus_1_y = centroid_t_minus_1_y / size_t_minus_1;
 plot(centroid_t_x, centroid_t_y, 'xr')
 plot(centroid_t_minus_1_x, centroid_t_minus_1_y, 'xb')
-hold off
 
 %Variance Vector generation
 
@@ -71,3 +70,22 @@ t_minus_1_points = [msg_t_minus_1_x(:) , msg_t_minus_1_y(:)];
 size_t_p = size(t_points)
 
 [Idx, Dist] = knnsearch(t_points, t_minus_1_points);
+for i = 1:size_t_minus_1
+    index = Idx(i)
+    plot( [msg_t_minus_1_x(i), msg_t_x(index)], [msg_t_minus_1_y(i), msg_t_y(index)] )
+end
+hold off
+
+if (size_t > size_t_minus_1)
+    multiplication_iterations = size_t_minus_1
+else
+    mutliplication_iterations = size_t
+end
+
+prime_t = [prime_t_x(:), prime_t_y(:)]
+prime_t_minus_1 = [prime_t_minus_1_x(:), prime_t_minus_1_y(:)]
+%for i=1:multiplication_iterations
+%    if (prime_t_x(i) ~= 0 & prime_t_y(i) ~= 0)
+        
+    
+
