@@ -11,9 +11,8 @@
 #include <cmath>
 #include "KDTree.h"
 
-//TODO: need to fix CalculateCentroid to accept Vector3f
-//TODO: need to fix make_prime_vec to accept Vector3f
-//rewrite all of the solveTransform code
+//TODO: Need to debug the kd tree
+//TODO: need to use kd tree as supervisor for loop transform
 
 class icp {
   public:
@@ -61,6 +60,7 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
 
   //TODO: modify this to for actual iteration
   if(this->enough_msgs) {
+
     this->solve_transformation_loop(this->msg_t_minus_1, this->msg_t);
   }
 
