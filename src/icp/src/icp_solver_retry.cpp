@@ -60,10 +60,17 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
 
   //TODO: modify this to for actual iteration
   if(this->enough_msgs) {
-
+    //error = kdtreesearch(msg_t_minus_1 msg_t)
+    //bool error_is_decreasing = true;
+    //final_transform = identity matrix
+    //while (error > error_threshold && error_is_decreasing) {
+    //error_placeholder = error
     this->solve_transformation_loop(this->msg_t_minus_1, this->msg_t);
+    // final_transform  = transform * final_transform
+    //apply_transformation(msg_t_minus_1)
+    //error = kdtreesearch(msg_t_minus_1 msg_t)
+    //}
   }
-
 }
 
 Eigen::Vector2f icp::calculateCentroid(std::vector<Eigen::Vector3f> input_set) {
@@ -126,7 +133,7 @@ Eigen::Matrix3f icp::solve_transformation_loop(std::vector<Eigen::Vector3f> prev
   std::cout << "Transformation: " << std::endl << transformation.matrix() << std::endl;
   return transformation;
 }
-
+//********************************************************************************//
 std::vector<Eigen::Vector2f> icp::make_prime_vec(std::vector<Eigen::Vector3f> msg, Eigen::Vector2f input_centroid) {
   std::vector<Eigen::Vector2f> prime_vec;
   ROS_INFO("Making Prime Vec");
