@@ -184,6 +184,7 @@ std::vector<Eigen::Vector2f> icp::make_prime_vec(std::vector<Eigen::Vector3f> ms
 
 std::vector<Eigen::Vector3f> icp::apply_transformation(std::vector<Eigen::Vector3f> msg, Eigen::Matrix3f transformation) {
   std::vector<Eigen::Vector3f> output;
+
   for (size_t i = 0; i < msg.size(); i++) {
     Eigen::Vector3f transformed_vector = transformation * msg[i];
     output.push_back(transformed_vector);
