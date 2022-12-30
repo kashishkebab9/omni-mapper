@@ -1,3 +1,4 @@
+#include <iterator>
 #include <math.h>
 #define _USE_MATH_DEFINES
 
@@ -11,7 +12,6 @@
 #include <cmath>
 #include "KDTree.h"
 
-//TODO: Need to debug the kd tree
 //TODO: need to use kd tree as supervisor for loop transform
 
 class icp {
@@ -24,14 +24,12 @@ class icp {
     void scanCallback(const sensor_msgs::LaserScan msg);
     Eigen::Matrix3f solve_transformation_loop(std::vector<Eigen::Vector3f> prev_scan, std::vector<Eigen::Vector3f> current_scan);
     Eigen::Vector2f calculateCentroid(std::vector<Eigen::Vector3f> input_set);
+    std::vector<Eigen::Vector2f> make_prime_vec(std::vector<Eigen::Vector3f> msg, Eigen::Vector2f avg);
+    std::vector<Eigen::Vector3f> apply_transformation(std::vector<Eigen::Vector3f> msg, Eigen::Matrix3f transformation);
   
   private:
-    //msg 1 is x_t-1 meas
-    //msg_2 is x_t meas
     std::vector<Eigen::Vector3f> msg_t_minus_1;
     std::vector<Eigen::Vector3f> msg_t;
-    std::vector<Eigen::Vector2f> make_prime_vec(std::vector<Eigen::Vector3f> msg, Eigen::Vector2f avg);
-    //boolean to check if both msg slots are not empty
     bool enough_msgs;
 };
 
@@ -58,18 +56,54 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
     }
   }
 
-  //TODO: modify this to for actual iteration
   if(this->enough_msgs) {
-    //error = kdtreesearch(msg_t_minus_1 msg_t)
-    //bool error_is_decreasing = true;
-    //final_transform = identity matrix
-    //while (error > error_threshold && error_is_decreasing) {
-    //error_placeholder = error
-    this->solve_transformation_loop(this->msg_t_minus_1, this->msg_t);
-    // final_transform  = transform * final_transform
-    //apply_transformation(msg_t_minus_1)
-    //error = kdtreesearch(msg_t_minus_1 msg_t)
-    //}
+
+    KDTree tree;
+    tree.buildTree(this->msg_t);
+    float error = 0;
+
+    std::vector<Eigen::Vector3f> prev_msg_copy(this->msg_t_minus_1);
+    for (size_t i = 0; i < prev_msg_copy.size(); i++) {
+      std::pair<KDNode*, float> neighbor = tree.nearestNeighbor(prev_msg_copy[i]);
+      error += neighbor.second;
+    } 
+    
+    std::cout << "initial_error: " << error << std::endl;
+    float error_threshold = 7;
+    bool error_is_decreasing = true;
+    float error_copy = error + 1.0;
+    Eigen::Matrix3f final_transform;
+    final_transform.setIdentity();
+    while (error > error_threshold && error_is_decreasing && error < error_copy) {
+      std::cout << "Entered while loop" << std::endl;
+      std::cout << "error: " << error <<  std::endl;
+      std::cout << "error_copy: " <<error_copy << std::endl;
+      error_copy = error;
+
+      Eigen::Matrix3f transformation = this->solve_transformation_loop(prev_msg_copy, this->msg_t);
+      std::cout << "Transform: " << transformation.matrix() << std::endl;
+      std::vector<Eigen::Vector3f> transformed_prev_msg = this->apply_transformation(prev_msg_copy,  transformation);
+
+      float tracking_error=0;
+      for (size_t i = 0; i < transformed_prev_msg.size(); i++) {
+        std::pair<KDNode*, float> loop_error = tree.nearestNeighbor(transformed_prev_msg[i]);
+        tracking_error += loop_error.second;
+      } 
+      std::cout << "tracking_error: " << tracking_error << std::endl;
+
+      if(error > tracking_error) {
+        std::cout << "error is greater than tracking error!" << std::endl;
+        final_transform = transformation * final_transform; 
+        error = tracking_error;
+        prev_msg_copy.clear();
+        prev_msg_copy = transformed_prev_msg;
+      } else {
+        std::cout << "error is less than tracking error!" << std::endl;
+        error_is_decreasing = false;
+      }
+    }
+    std::cout << "Final Transformation: " << std::endl << final_transform.matrix() << std::endl;
+
   }
 }
 
@@ -120,8 +154,8 @@ Eigen::Matrix3f icp::solve_transformation_loop(std::vector<Eigen::Vector3f> prev
 
   //perform mentioned SVD:
   Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_final, Eigen::ComputeFullU | Eigen::ComputeFullV);
-  std::cout << "U: " << std::endl << svd.matrixU() << std::endl;
-  std::cout << "V: " << std::endl << svd.matrixV() << std::endl;
+  //std::cout << "U: " << std::endl << svd.matrixU() << std::endl;
+  //std::cout << "V: " << std::endl << svd.matrixV() << std::endl;
   
   //get our transformation Matrix:
   Eigen::Matrix2f rotation = svd.matrixU() * svd.matrixV();
@@ -136,7 +170,7 @@ Eigen::Matrix3f icp::solve_transformation_loop(std::vector<Eigen::Vector3f> prev
 //********************************************************************************//
 std::vector<Eigen::Vector2f> icp::make_prime_vec(std::vector<Eigen::Vector3f> msg, Eigen::Vector2f input_centroid) {
   std::vector<Eigen::Vector2f> prime_vec;
-  ROS_INFO("Making Prime Vec");
+  ROS_DEBUG("Making Prime Vec");
   for(size_t i = 0; i < msg.size(); i++) {
     float x = (msg[i]).x() - input_centroid.x();
     float y = (msg[i]).y() - input_centroid.y();
@@ -146,6 +180,15 @@ std::vector<Eigen::Vector2f> icp::make_prime_vec(std::vector<Eigen::Vector3f> ms
     prime_vec.push_back(prime_element);
   } 
   return prime_vec;
+}
+
+std::vector<Eigen::Vector3f> icp::apply_transformation(std::vector<Eigen::Vector3f> msg, Eigen::Matrix3f transformation) {
+  std::vector<Eigen::Vector3f> output;
+  for (size_t i = 0; i < msg.size(); i++) {
+    Eigen::Vector3f transformed_vector = transformation * msg[i];
+    output.push_back(transformed_vector);
+  }
+  return output;
 }
 
 int main(int argc, char **argv)
