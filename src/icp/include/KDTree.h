@@ -72,7 +72,7 @@ KDNode* KDTree::buildTree(std::vector<Eigen::Vector2f> point_set, int depth, KDN
 
 std::pair<KDNode*, float> KDTree::nearestNeighbor(Eigen::Vector2f input_pt) {
  // ROS_DEBUG("Input Point: %f, %f", input_pt[0], input_pt[1]);
-  std::cout << "Input Point: " << input_pt[0] << ", " << input_pt[i] << std::endl;
+//  std::cout << "Input Point: " << input_pt[0] << ", " << input_pt[1] << std::endl;
   KDNode * iter = this->root_node; 
   KDNode * nearest_neighbor;
 
@@ -118,7 +118,7 @@ std::pair<KDNode*, float> KDTree::nearestNeighbor(Eigen::Vector2f input_pt) {
   }
 
  // ROS_DEBUG("Nearest Neighbor Coordinate: [%f, %f]", nearest_neighbor->coordinate[0], nearest_neighbor->coordinate[1]);
-  std::cout << "Nearest Neighbor Coordinate: " << nearest_neighbor->coordinate[0] << ", " << nearest_neighhbor->coordinate[1] << std::endl; 
+//  std::cout << "Nearest Neighbor Coordinate: " << nearest_neighbor->coordinate[0] << ", " << nearest_neighbor->coordinate[1] << std::endl; 
 //  ROS_DEBUG("Distance: %f", best_dist);
   std::cout << "Distance: " << best_dist << std::endl;
   //the above should return us the leaf node associated with this input pt
