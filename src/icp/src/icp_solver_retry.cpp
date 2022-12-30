@@ -44,6 +44,9 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
     if (abs(msg.ranges[i]) > .01) {
       float x = msg.ranges[i] * cos(i * (M_PI/180)); 
       float y = msg.ranges[i] * sin(i * (M_PI/180)); 
+      if (i == 0) {
+        y = .10;
+      }
       Eigen::Vector3f meas(x, y, 1);
       latest_beam_meas.push_back(meas);
       ROS_DEBUG("Beam [%i]: [%f], [%f], [%f]", i, meas[0], meas[1], meas[2]);
@@ -57,6 +60,29 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
   }
 
   if(this->enough_msgs) {
+    
+    std::cout << "msg_t x:" << std::endl;
+    for (int i = 0; i < this->msg_t.size(); i++) {
+      std::cout << msg_t[i].x() << ", ";
+    }
+    std::cout <<std::endl;
+    std::cout << "msg_t y:" << std::endl;
+    for (int i = 0; i < this->msg_t.size(); i++) {
+      std::cout << msg_t[i].y() << ", ";
+    }
+    std::cout <<std::endl;
+
+    std::cout << "msg_t_minus_1 x:" << std::endl;
+    for (int i = 0; i < this->msg_t_minus_1.size(); i++) {
+      std::cout << msg_t_minus_1[i].x() << ", ";
+    }
+    std::cout <<std::endl;
+    std::cout << "msg_t_minus_1 y:" << std::endl;
+    for (int i = 0; i < this->msg_t_minus_1.size(); i++) {
+      std::cout << msg_t_minus_1[i].y() << ", ";
+    }
+    std::cout <<std::endl;
+
 
     KDTree tree;
     tree.buildTree(this->msg_t);
