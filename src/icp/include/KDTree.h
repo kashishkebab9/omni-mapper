@@ -27,7 +27,7 @@ class KDTree {
 };
 
 float calcDistance(KDNode * node,  Eigen::Vector3f point) {
-  return (sqrt(pow(point[0] - node->coordinate[0] ,2) + pow(point[1] - node->coordinate[1], 2)));
+  return (sqrt(pow(point.x() - node->coordinate.x() ,2) + pow(point.y() - node->coordinate.y(), 2)));
 }
 
 KDNode* KDTree::buildTree(std::vector<Eigen::Vector3f> point_set, int depth, KDNode * parent_node) {

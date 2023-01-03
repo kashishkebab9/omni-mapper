@@ -44,12 +44,11 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
     if (abs(msg.ranges[i]) > .01) {
       float x = msg.ranges[i] * cos(i * (M_PI/180)); 
       float y = msg.ranges[i] * sin(i * (M_PI/180)); 
-      if (i < .01) {
-        y = .10;
+      if (i != 0) {
+        Eigen::Vector3f meas(x, y, 1);
+        latest_beam_meas.push_back(meas);
+        ROS_DEBUG("Beam [%i]: [%f], [%f], [%f]", i, meas[0], meas[1], meas[2]);
       }
-      Eigen::Vector3f meas(x, y, 1);
-      latest_beam_meas.push_back(meas);
-      ROS_DEBUG("Beam [%i]: [%f], [%f], [%f]", i, meas[0], meas[1], meas[2]);
     }
   }
   this->msg_t = latest_beam_meas;
@@ -95,7 +94,7 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
     } 
     
     std::cout << "initial_error: " << error << std::endl;
-    float error_threshold = 7;
+    float error_threshold = 15;
     bool error_is_decreasing = true;
     float error_copy = error + 1.0;
     Eigen::Matrix3f final_transform;
@@ -105,6 +104,7 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
       std::cout << "error: " << error <<  std::endl;
       std::cout << "error_copy: " <<error_copy << std::endl;
       error_copy = error;
+      std::cout << "error_copy: " <<error_copy << std::endl;
 
       Eigen::Matrix3f transformation = this->solve_transformation_loop(prev_msg_copy, this->msg_t);
       std::cout << "Transform: " << transformation.matrix() << std::endl;
@@ -113,7 +113,10 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
       float tracking_error=0;
       for (size_t i = 0; i < transformed_prev_msg.size(); i++) {
         std::pair<KDNode*, float> loop_error = tree.nearestNeighbor(transformed_prev_msg[i]);
-        tracking_error += loop_error.second;
+        if (loop_error.second < 20) {
+          tracking_error += loop_error.second;
+
+        }
       } 
       std::cout << "tracking_error: " << tracking_error << std::endl;
 
