@@ -44,7 +44,7 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
     if (abs(msg.ranges[i]) > .01) {
       float x = msg.ranges[i] * cos(i * (M_PI/180)); 
       float y = msg.ranges[i] * sin(i * (M_PI/180)); 
-      if (i == 0) {
+      if (i < .01) {
         y = .10;
       }
       Eigen::Vector3f meas(x, y, 1);
@@ -138,7 +138,7 @@ Eigen::Vector2f icp::calculateCentroid(std::vector<Eigen::Vector3f> input_set) {
   float avg_y = 0;
 
   for (auto i: input_set) {
-    if (i.x() != 0 && i.y() != 0 && i.x() !=-0 && i.y() != 0 ) {
+    if (i.x() != 0 && i.y() != 0 && i.x() !=-0 && i.y() != -0 ) {
       avg_x += i.x(); 
       avg_y += i.y();
     }
