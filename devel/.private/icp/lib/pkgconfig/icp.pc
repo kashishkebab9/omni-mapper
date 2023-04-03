@@ -1,4 +1,4 @@
-prefix=/home/kgarg/robotics/omni-mapper/devel/.private/icp
+prefix=/home/kash/robotics/omni-mapper/devel/.private/icp
 
 Name: icp
 Description: Description of icp

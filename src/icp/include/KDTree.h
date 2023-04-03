@@ -117,11 +117,8 @@ std::pair<KDNode*, float> KDTree::nearestNeighbor(Eigen::Vector3f input_pt) {
     }
   }
 
- // ROS_DEBUG("Nearest Neighbor Coordinate: [%f, %f]", nearest_neighbor->coordinate[0], nearest_neighbor->coordinate[1]);
-//  std::cout << "Nearest Neighbor Coordinate: " << nearest_neighbor->coordinate[0] << ", " << nearest_neighbor->coordinate[1] << std::endl; 
-//  ROS_DEBUG("Distance: %f", best_dist);
-  //std::cout << "Distance: " << best_dist << std::endl;
-  //the above should return us the leaf node associated with this input pt
+  ROS_DEBUG("Nearest Neighbor Coordinate: [%f, %f]", nearest_neighbor->coordinate[0], nearest_neighbor->coordinate[1]);
+  ROS_DEBUG("Distance: %f", best_dist);
   auto output = std::make_pair(nearest_neighbor, best_dist);
   return output; 
 

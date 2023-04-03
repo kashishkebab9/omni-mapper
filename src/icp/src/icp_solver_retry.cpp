@@ -1,10 +1,12 @@
 #include <iterator>
 #include <math.h>
+#include <boost/bind/bind.hpp>
 #define _USE_MATH_DEFINES
 
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include <sensor_msgs/LaserScan.h>
+#include <visualization_msgs/Marker.h>
 #include <vector>
 #include <experimental/optional>
 #include <functional>
@@ -19,18 +21,24 @@ class icp {
 
     icp() {
       this->enough_msgs=false;
+      scan_sub = nh.subscribe("scarab41/scan", 1, &icp::scanCallback, this);
+      scan_centroid_pub = nh.advertise<visualization_msgs::Marker>("scan_centroid", 1);
     }
-
     void scanCallback(const sensor_msgs::LaserScan msg);
     Eigen::Matrix3f solve_transformation_loop(std::vector<Eigen::Vector3f> prev_scan, std::vector<Eigen::Vector3f> current_scan);
     Eigen::Vector2f calculateCentroid(std::vector<Eigen::Vector3f> input_set);
     std::vector<Eigen::Vector2f> make_prime_vec(std::vector<Eigen::Vector3f> msg, Eigen::Vector2f avg);
     std::vector<Eigen::Vector3f> apply_transformation(std::vector<Eigen::Vector3f> msg, Eigen::Matrix3f transformation);
+
   
   private:
+    ros::NodeHandle nh, pnh;
+    ros::Subscriber scan_sub;
+    ros::Publisher scan_centroid_pub;
     std::vector<Eigen::Vector3f> msg_t_minus_1;
     std::vector<Eigen::Vector3f> msg_t;
     bool enough_msgs;
+
 };
 
 
@@ -47,7 +55,7 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
       if (i != 0) {
         Eigen::Vector3f meas(x, y, 1);
         latest_beam_meas.push_back(meas);
-        ROS_DEBUG("Beam [%i]: [%f], [%f], [%f]", i, meas[0], meas[1], meas[2]);
+        //ROS_INFO("Beam [%i]: [%f], [%f], [%f]", i, meas[0], meas[1], meas[2]);
       }
     }
   }
@@ -60,29 +68,6 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
 
   if(this->enough_msgs) {
     
-    std::cout << "msg_t x:" << std::endl;
-    for (int i = 0; i < this->msg_t.size(); i++) {
-      std::cout << msg_t[i].x() << ", ";
-    }
-    std::cout <<std::endl;
-    std::cout << "msg_t y:" << std::endl;
-    for (int i = 0; i < this->msg_t.size(); i++) {
-      std::cout << msg_t[i].y() << ", ";
-    }
-    std::cout <<std::endl;
-
-    std::cout << "msg_t_minus_1 x:" << std::endl;
-    for (int i = 0; i < this->msg_t_minus_1.size(); i++) {
-      std::cout << msg_t_minus_1[i].x() << ", ";
-    }
-    std::cout <<std::endl;
-    std::cout << "msg_t_minus_1 y:" << std::endl;
-    for (int i = 0; i < this->msg_t_minus_1.size(); i++) {
-      std::cout << msg_t_minus_1[i].y() << ", ";
-    }
-    std::cout <<std::endl;
-
-
     KDTree tree;
     tree.buildTree(this->msg_t);
     float error = 0;
@@ -90,21 +75,22 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
     std::vector<Eigen::Vector3f> prev_msg_copy(this->msg_t_minus_1);
     for (size_t i = 0; i < prev_msg_copy.size(); i++) {
       std::pair<KDNode*, float> neighbor = tree.nearestNeighbor(prev_msg_copy[i]);
+      // Total error accruel:
       error += neighbor.second;
     } 
     
-    std::cout << "initial_error: " << error << std::endl;
+    std::cout << "Initial Error: " << error << std::endl;
+
     float error_threshold = 15;
     bool error_is_decreasing = true;
+
     float error_copy = error + 1.0;
     Eigen::Matrix3f final_transform;
     final_transform.setIdentity();
     while (error > error_threshold && error_is_decreasing && error < error_copy) {
       std::cout << "Entered while loop" << std::endl;
       std::cout << "error: " << error <<  std::endl;
-      std::cout << "error_copy: " <<error_copy << std::endl;
       error_copy = error;
-      std::cout << "error_copy: " <<error_copy << std::endl;
 
       Eigen::Matrix3f transformation = this->solve_transformation_loop(prev_msg_copy, this->msg_t);
       std::cout << "Transform: " << transformation.matrix() << std::endl;
@@ -158,10 +144,44 @@ Eigen::Vector2f icp::calculateCentroid(std::vector<Eigen::Vector3f> input_set) {
 
 
 //********************************************************************************//
+
 Eigen::Matrix3f icp::solve_transformation_loop(std::vector<Eigen::Vector3f> prev_scan, std::vector<Eigen::Vector3f> current_scan) {
+
   //we need to calculate the centroids:
   Eigen::Vector2f prev_centroid = this->calculateCentroid(prev_scan);
   Eigen::Vector2f current_centroid = this->calculateCentroid(current_scan);
+  
+  //lets put some markers down for the centroid:
+  visualization_msgs::Marker centroid_marker;
+  centroid_marker.action = visualization_msgs::Marker::DELETEALL;
+  centroid_marker.header.frame_id = "scarab41/laser";
+  centroid_marker.ns = "centroids";
+  centroid_marker.action = visualization_msgs::Marker::ADD;
+  centroid_marker.pose.orientation.w = 1.0;
+  centroid_marker.id = 0;
+  centroid_marker.type = visualization_msgs::Marker::POINTS;
+
+  centroid_marker.scale.x = 0.2;
+  centroid_marker.scale.y = 0.2;
+  centroid_marker.color.b = 1.0f;
+  centroid_marker.color.a = 1.0;
+
+  geometry_msgs::Point prev_marker, current_marker;
+  prev_marker.x = prev_centroid.x();
+  prev_marker.y = prev_centroid.y();
+  prev_marker.z = 0; 
+  current_marker.x = current_centroid.x();
+  current_marker.y = current_centroid.y();
+  current_marker.z = 0; 
+
+  centroid_marker.points.push_back(prev_marker);
+  centroid_marker.points.push_back(current_marker);
+  this->scan_centroid_pub.publish(centroid_marker);
+
+
+
+
+  
 
   //we need to generate variance prime vec:
   std::vector<Eigen::Vector2f> prev_prime = this->make_prime_vec(prev_scan,  prev_centroid); 
@@ -223,11 +243,12 @@ std::vector<Eigen::Vector3f> icp::apply_transformation(std::vector<Eigen::Vector
 
 int main(int argc, char **argv)
 {
-  icp icp_solver;
   ros::init(argc, argv, "icp_node");
-  ros::NodeHandle n;
-  ros::Subscriber sub = n.subscribe("scan", 1001, &icp::scanCallback, &icp_solver);
-  ros::spin();
+  icp solver;
+  while (ros::ok()) {
+    ros::spinOnce();
+  }
+
 
   return 0;
 }

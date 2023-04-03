@@ -1,1 +1,1 @@
-/home/kgarg/robotics/omni-mapper/devel/.private/catkin_tools_prebuild/local_setup.sh
+/home/kash/robotics/omni-mapper/devel/.private/catkin_tools_prebuild/local_setup.sh
