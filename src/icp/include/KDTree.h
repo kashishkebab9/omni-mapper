@@ -101,6 +101,7 @@ std::pair<KDNode*, float> KDTree::nearestNeighbor(Eigen::Vector3f input_pt) {
       }
     }
   }
+
   //we need to unwind and check recursively for any nearer neighbors    
   iter = iter->parent_node;
   while (iter != this->root_node) {

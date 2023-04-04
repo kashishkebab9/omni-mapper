@@ -9,12 +9,13 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   visualization_msgs
+  laser_geometry
 )
 
 catkin_package()
 
 include_directories(include ${catkin_INCLUDE_DIRS})
-#add_executable(icp src/icp_solver.cpp)
-#target_link_libraries(icp ${catkin_LIBRARIES})
-add_executable(icp_retry src/icp_solver_retry.cpp)
+add_executable(icp_retry src/icp_solver_node.cpp)
 target_link_libraries(icp_retry ${catkin_LIBRARIES})
+add_executable(scan_converter src/scan_to_pcl.cpp)
+target_link_libraries(scan_converter ${catkin_LIBRARIES})

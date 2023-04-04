@@ -1,46 +1,4 @@
-#include <iterator>
-#include <math.h>
-#include <boost/bind/bind.hpp>
-#define _USE_MATH_DEFINES
-
-#include "ros/ros.h"
-#include "std_msgs/String.h"
-#include <sensor_msgs/LaserScan.h>
-#include <visualization_msgs/Marker.h>
-#include <vector>
-#include <experimental/optional>
-#include <functional>
-#include <eigen3/Eigen/Dense>
-#include <cmath>
-#include "KDTree.h"
-
-//TODO: need to use kd tree as supervisor for loop transform
-
-class icp {
-  public:
-
-    icp() {
-      this->enough_msgs=false;
-      scan_sub = nh.subscribe("scarab41/scan", 1, &icp::scanCallback, this);
-      scan_centroid_pub = nh.advertise<visualization_msgs::Marker>("scan_centroid", 1);
-    }
-    void scanCallback(const sensor_msgs::LaserScan msg);
-    Eigen::Matrix3f solve_transformation_loop(std::vector<Eigen::Vector3f> prev_scan, std::vector<Eigen::Vector3f> current_scan);
-    Eigen::Vector2f calculateCentroid(std::vector<Eigen::Vector3f> input_set);
-    std::vector<Eigen::Vector2f> make_prime_vec(std::vector<Eigen::Vector3f> msg, Eigen::Vector2f avg);
-    std::vector<Eigen::Vector3f> apply_transformation(std::vector<Eigen::Vector3f> msg, Eigen::Matrix3f transformation);
-
-  
-  private:
-    ros::NodeHandle nh, pnh;
-    ros::Subscriber scan_sub;
-    ros::Publisher scan_centroid_pub;
-    std::vector<Eigen::Vector3f> msg_t_minus_1;
-    std::vector<Eigen::Vector3f> msg_t;
-    bool enough_msgs;
-
-};
-
+#include "icp.h"
 
 void icp::scanCallback(const sensor_msgs::LaserScan  msg)
 {
@@ -48,30 +6,57 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
 
   std::vector<Eigen::Vector3f> latest_beam_meas;
   for (int i = 0; i < msg.ranges.size(); i++) {
+
     // Convert Polar Coordinates to Cartesian:
     if (abs(msg.ranges[i]) > .01) {
       float x = msg.ranges[i] * cos(i * (M_PI/180)); 
       float y = msg.ranges[i] * sin(i * (M_PI/180)); 
+
       if (i != 0) {
         Eigen::Vector3f meas(x, y, 1);
         latest_beam_meas.push_back(meas);
-        //ROS_INFO("Beam [%i]: [%f], [%f], [%f]", i, meas[0], meas[1], meas[2]);
       }
     }
   }
+
   this->msg_t = latest_beam_meas;
+
   if (!this->enough_msgs) {
+
     if(!msg_t_minus_1.size() == 0) {
       this->enough_msgs = true;
     }
   }
 
   if(this->enough_msgs) {
-    
+    // lets publish markers to make sure this polar->cartesian transformation was successful
+    visualization_msgs::Marker cartesian_points;
+    cartesian_points.action = visualization_msgs::Marker::DELETEALL;
+    cartesian_points.header.frame_id = "scarab41/laser";
+    cartesian_points.ns = "cartesian";
+    cartesian_points.action = visualization_msgs::Marker::ADD;
+    cartesian_points.pose.orientation.w = 1.0;
+    cartesian_points.id = 0;
+    cartesian_points.type = visualization_msgs::Marker::POINTS;
+
+    cartesian_points.scale.x = 0.1;
+    cartesian_points.scale.y = 0.1;
+    cartesian_points.color.r = 1.0f;
+    cartesian_points.color.a = 1.0;
+
+    for (auto x: this->msg_t)  {
+      geometry_msgs::Point point;
+      point.x = x.x();
+      point.y = x.y();
+      point.z = 0;
+      cartesian_points.points.push_back(point);
+  }
+  this->cartesian_points_pub.publish(cartesian_points);
     KDTree tree;
     tree.buildTree(this->msg_t);
     float error = 0;
 
+    // copy the prev_msg, as we plan on modifying the contents within the transformation loop:
     std::vector<Eigen::Vector3f> prev_msg_copy(this->msg_t_minus_1);
     for (size_t i = 0; i < prev_msg_copy.size(); i++) {
       std::pair<KDNode*, float> neighbor = tree.nearestNeighbor(prev_msg_copy[i]);
@@ -87,6 +72,7 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
     float error_copy = error + 1.0;
     Eigen::Matrix3f final_transform;
     final_transform.setIdentity();
+
     while (error > error_threshold && error_is_decreasing && error < error_copy) {
       std::cout << "Entered while loop" << std::endl;
       std::cout << "error: " << error <<  std::endl;
@@ -96,6 +82,29 @@ void icp::scanCallback(const sensor_msgs::LaserScan  msg)
       std::cout << "Transform: " << transformation.matrix() << std::endl;
       std::vector<Eigen::Vector3f> transformed_prev_msg = this->apply_transformation(prev_msg_copy,  transformation);
 
+      //lets visualize this transformed msg:
+      visualization_msgs::Marker transformed_scan;
+      transformed_scan.action = visualization_msgs::Marker::DELETEALL;
+      transformed_scan.header.frame_id = "scarab41/laser";
+      transformed_scan.ns = "centroids";
+      transformed_scan.action = visualization_msgs::Marker::ADD;
+      transformed_scan.pose.orientation.w = 1.0;
+      transformed_scan.id = 0;
+      transformed_scan.type = visualization_msgs::Marker::POINTS;
+
+      transformed_scan.scale.x = 0.1;
+      transformed_scan.scale.y = 0.1;
+      transformed_scan.color.g = 1.0f;
+      transformed_scan.color.a = 1.0;
+
+      for (auto x: transformed_prev_msg)  {
+        geometry_msgs::Point point;
+        point.x = x.x();
+        point.y = x.y();
+        point.z = 0;
+        transformed_scan.points.push_back(point);
+      }
+      this->transformed_scan_pub.publish(transformed_scan);
       float tracking_error=0;
       for (size_t i = 0; i < transformed_prev_msg.size(); i++) {
         std::pair<KDNode*, float> loop_error = tree.nearestNeighbor(transformed_prev_msg[i]);
@@ -178,12 +187,8 @@ Eigen::Matrix3f icp::solve_transformation_loop(std::vector<Eigen::Vector3f> prev
   centroid_marker.points.push_back(current_marker);
   this->scan_centroid_pub.publish(centroid_marker);
 
-
-
-
-  
-
   //we need to generate variance prime vec:
+  // TODO: I believe this is the problem with my code. These matrices are not the shape we thought
   std::vector<Eigen::Vector2f> prev_prime = this->make_prime_vec(prev_scan,  prev_centroid); 
   std::vector<Eigen::Vector2f> current_prime = this->make_prime_vec(current_scan,  current_centroid); 
 
@@ -197,9 +202,13 @@ Eigen::Matrix3f icp::solve_transformation_loop(std::vector<Eigen::Vector3f> prev
 
   Eigen::Matrix2f W_final = Eigen::Matrix2f::Zero();
   for (size_t i= 0; i < summation_iteration ; i++) {
-    Eigen::Matrix2f w_loop = current_prime[i] * prev_prime[i].transpose();
+    Eigen::Matrix2f w_loop = prev_prime[i] * current_prime[i].transpose();
     W_final += w_loop;
   }
+
+  std::cout << "W_final: " << W_final.matrix() << std::endl;
+  W_final = W_final.array()/summation_iteration;
+  std::cout << "W_final: " << W_final.matrix() << std::endl;
 
   //perform mentioned SVD:
   Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_final, Eigen::ComputeFullU | Eigen::ComputeFullV);
@@ -207,17 +216,20 @@ Eigen::Matrix3f icp::solve_transformation_loop(std::vector<Eigen::Vector3f> prev
   //std::cout << "V: " << std::endl << svd.matrixV() << std::endl;
   
   //get our transformation Matrix:
-  Eigen::Matrix2f rotation = svd.matrixU() * svd.matrixV();
+  Eigen::Matrix2f rotation = svd.matrixU() * svd.matrixV().transpose();
   Eigen::Vector2f translation = current_centroid - (rotation * prev_centroid);
   Eigen::Matrix3f transformation;
   transformation.setIdentity();
   transformation.block<2,2>(0,0) = rotation;
   transformation.block<2,1>(0,2) = translation;
+  std::cout << "Rotation: " << std::endl << rotation.matrix() << std::endl;
+  std::cout << "Translation: " << std::endl << translation.matrix() << std::endl;
   std::cout << "Transformation: " << std::endl << transformation.matrix() << std::endl;
   return transformation;
 }
 //********************************************************************************//
 std::vector<Eigen::Vector2f> icp::make_prime_vec(std::vector<Eigen::Vector3f> msg, Eigen::Vector2f input_centroid) {
+  //prime vec is simply for each point in a message, subtract the centroid from it and return the modified message
   std::vector<Eigen::Vector2f> prime_vec;
   ROS_DEBUG("Making Prime Vec");
   for(size_t i = 0; i < msg.size(); i++) {
@@ -245,10 +257,10 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "icp_node");
   icp solver;
+
   while (ros::ok()) {
     ros::spinOnce();
   }
-
 
   return 0;
 }
