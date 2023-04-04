@@ -1,25 +1,34 @@
 #include "icp.h"
 
-void icp::scanCallback(const sensor_msgs::LaserScan  msg)
+void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
 {
   this->msg_t_minus_1 = this->msg_t;
 
-  std::vector<Eigen::Vector3f> latest_beam_meas;
-  for (int i = 0; i < msg.ranges.size(); i++) {
 
-    // Convert Polar Coordinates to Cartesian:
-    if (abs(msg.ranges[i]) > .01) {
-      float x = msg.ranges[i] * cos(i * (M_PI/180)); 
-      float y = msg.ranges[i] * sin(i * (M_PI/180)); 
+  this->msg_t.clear();
 
-      if (i != 0) {
-        Eigen::Vector3f meas(x, y, 1);
-        latest_beam_meas.push_back(meas);
-      }
-    }
+  for (const auto& point : msg->points) {
+    Eigen::Vector3f point_eigen(point.x, point.y, 1);
+    this->msg_t.push_back(point_eigen);
   }
 
-  this->msg_t = latest_beam_meas;
+
+ // std::vector<Eigen::Vector3f> latest_beam_meas;
+ // for (int i = 0; i < msg.ranges.size(); i++) {
+
+ //   // Convert Polar Coordinates to Cartesian:
+ //   if (abs(msg.ranges[i]) > .01) {
+ //     float x = msg.ranges[i] * cos(i * (M_PI/180)); 
+ //     float y = msg.ranges[i] * sin(i * (M_PI/180)); 
+
+ //     if (i != 0) {
+ //       Eigen::Vector3f meas(x, y, 1);
+ //       latest_beam_meas.push_back(meas);
+ //     }
+ //   }
+ // }
+
+  //this->msg_t = latest_beam_meas;
 
   if (!this->enough_msgs) {
 

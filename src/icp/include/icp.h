@@ -4,6 +4,7 @@
 #define _USE_MATH_DEFINES
 #include "ros/ros.h"
 #include <laser_geometry/laser_geometry.h>
+#include <sensor_msgs/PointCloud.h>
 
 #include "std_msgs/String.h"
 #include <sensor_msgs/LaserScan.h>
@@ -19,13 +20,13 @@ class icp {
   public:
     icp() {
       this->enough_msgs=false;
-      scan_sub = nh.subscribe("scarab41/scan", 1, &icp::scanCallback, this);
+      pcl_sub = nh.subscribe("pointcloud", 1, &icp::pclCallback, this);
       scan_centroid_pub = nh.advertise<visualization_msgs::Marker>("scan_centroid", 1);
       transformed_scan_pub = nh.advertise<visualization_msgs::Marker>("transformed_scan", 1);
       cartesian_points_pub = nh.advertise<visualization_msgs::Marker>("cartesian_points", 1);
     }
 
-    void scanCallback(const sensor_msgs::LaserScan msg);
+    void pclCallback(const sensor_msgs::PointCloud::ConstPtr& msg);
     Eigen::Matrix3f solve_transformation_loop(std::vector<Eigen::Vector3f> prev_scan, std::vector<Eigen::Vector3f> current_scan);
     Eigen::Vector2f calculateCentroid(std::vector<Eigen::Vector3f> input_set);
     std::vector<Eigen::Vector2f> make_prime_vec(std::vector<Eigen::Vector3f> msg, Eigen::Vector2f avg);
@@ -35,7 +36,7 @@ class icp {
   
   private:
     ros::NodeHandle nh, pnh;
-    ros::Subscriber scan_sub;
+    ros::Subscriber pcl_sub;
 
     ros::Publisher cartesian_points_pub;
     ros::Publisher scan_centroid_pub;
