@@ -23,6 +23,7 @@ class icp {
       pcl_sub = nh.subscribe("pointcloud", 1, &icp::pclCallback, this);
       scan_centroid_pub = nh.advertise<visualization_msgs::Marker>("scan_centroid", 1);
       transformed_scan_pub = nh.advertise<visualization_msgs::Marker>("transformed_scan", 1);
+      prev_scan_pub = nh.advertise<visualization_msgs::Marker>("prev_scan", 1);
       cartesian_points_pub = nh.advertise<visualization_msgs::Marker>("cartesian_points", 1);
     }
 
@@ -41,6 +42,7 @@ class icp {
     ros::Publisher cartesian_points_pub;
     ros::Publisher scan_centroid_pub;
     ros::Publisher transformed_scan_pub;
+    ros::Publisher prev_scan_pub;
 
     std::vector<Eigen::Vector3f> msg_t_minus_1;
     std::vector<Eigen::Vector3f> msg_t;

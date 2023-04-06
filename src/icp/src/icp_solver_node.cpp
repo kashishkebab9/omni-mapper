@@ -12,24 +12,6 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
     this->msg_t.push_back(point_eigen);
   }
 
-
- // std::vector<Eigen::Vector3f> latest_beam_meas;
- // for (int i = 0; i < msg.ranges.size(); i++) {
-
- //   // Convert Polar Coordinates to Cartesian:
- //   if (abs(msg.ranges[i]) > .01) {
- //     float x = msg.ranges[i] * cos(i * (M_PI/180)); 
- //     float y = msg.ranges[i] * sin(i * (M_PI/180)); 
-
- //     if (i != 0) {
- //       Eigen::Vector3f meas(x, y, 1);
- //       latest_beam_meas.push_back(meas);
- //     }
- //   }
- // }
-
-  //this->msg_t = latest_beam_meas;
-
   if (!this->enough_msgs) {
 
     if(!msg_t_minus_1.size() == 0) {
@@ -60,6 +42,7 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
       point.z = 0;
       cartesian_points.points.push_back(point);
   }
+
   this->cartesian_points_pub.publish(cartesian_points);
     KDTree tree;
     tree.buildTree(this->msg_t);
@@ -81,10 +64,36 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
     float error_copy = error + 1.0;
     Eigen::Matrix3f final_transform;
     final_transform.setIdentity();
+    //lets visualize the prev_msg:
+    visualization_msgs::Marker prev_scan;
+    prev_scan.action = visualization_msgs::Marker::DELETEALL;
+    prev_scan.header.frame_id = "scarab41/laser";
+    prev_scan.ns = "prev_msg_scan";
+    prev_scan.action = visualization_msgs::Marker::ADD;
+    prev_scan.pose.orientation.w = 1.0;
+    prev_scan.id = 0;
+    prev_scan.type = visualization_msgs::Marker::POINTS;
 
-    while (error > error_threshold && error_is_decreasing && error < error_copy) {
+    prev_scan.scale.x = 0.1;
+    prev_scan.scale.y = 0.1;
+    prev_scan.color.g = 1.0f;
+    prev_scan.color.b = 1.0f;
+    prev_scan.color.a = 1.0;
+
+    for (auto x: prev_msg_copy)  {
+      geometry_msgs::Point point;
+      point.x = x.x();
+      point.y = x.y();
+      point.z = 0;
+      prev_scan.points.push_back(point);
+    }
+
+    this->prev_scan_pub.publish(prev_scan);
+
+    while (error > error_threshold && error < error_copy) {
       std::cout << "Entered while loop" << std::endl;
       std::cout << "error: " << error <<  std::endl;
+      std::cout << "error_copy: " << error_copy <<  std::endl;
       error_copy = error;
 
       Eigen::Matrix3f transformation = this->solve_transformation_loop(prev_msg_copy, this->msg_t);
@@ -113,8 +122,10 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
         point.z = 0;
         transformed_scan.points.push_back(point);
       }
+
       this->transformed_scan_pub.publish(transformed_scan);
       float tracking_error=0;
+
       for (size_t i = 0; i < transformed_prev_msg.size(); i++) {
         std::pair<KDNode*, float> loop_error = tree.nearestNeighbor(transformed_prev_msg[i]);
         if (loop_error.second < 20) {
@@ -221,8 +232,6 @@ Eigen::Matrix3f icp::solve_transformation_loop(std::vector<Eigen::Vector3f> prev
 
   //perform mentioned SVD:
   Eigen::JacobiSVD<Eigen::Matrix2f> svd(W_final, Eigen::ComputeFullU | Eigen::ComputeFullV);
-  //std::cout << "U: " << std::endl << svd.matrixU() << std::endl;
-  //std::cout << "V: " << std::endl << svd.matrixV() << std::endl;
   
   //get our transformation Matrix:
   Eigen::Matrix2f rotation = svd.matrixU() * svd.matrixV().transpose();
