@@ -1,0 +1,11 @@
+<launch>
+
+    <node name="scan_to_pcl_node" pkg="icp" type="scan_converter" output="screen"></node>
+    <node name="icp_solver_node" pkg="icp" type="icp_retry" output="screen"></node>
+
+
+
+
+
+
+</launch>

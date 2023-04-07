@@ -3,8 +3,6 @@
 void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
 {
   this->msg_t_minus_1 = this->msg_t;
-
-
   this->msg_t.clear();
 
   for (const auto& point : msg->points) {
@@ -21,29 +19,29 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
 
   if(this->enough_msgs) {
     // lets publish markers to make sure this polar->cartesian transformation was successful
-    visualization_msgs::Marker cartesian_points;
-    cartesian_points.action = visualization_msgs::Marker::DELETEALL;
-    cartesian_points.header.frame_id = "scarab41/laser";
-    cartesian_points.ns = "cartesian";
-    cartesian_points.action = visualization_msgs::Marker::ADD;
-    cartesian_points.pose.orientation.w = 1.0;
-    cartesian_points.id = 0;
-    cartesian_points.type = visualization_msgs::Marker::POINTS;
+   // visualization_msgs::Marker cartesian_points;
+   // cartesian_points.action = visualization_msgs::Marker::DELETEALL;
+   // cartesian_points.header.frame_id = "scarab41/laser";
+   // cartesian_points.ns = "cartesian";
+   // cartesian_points.action = visualization_msgs::Marker::ADD;
+   // cartesian_points.pose.orientation.w = 1.0;
+   // cartesian_points.id = 0;
+   // cartesian_points.type = visualization_msgs::Marker::POINTS;
 
-    cartesian_points.scale.x = 0.1;
-    cartesian_points.scale.y = 0.1;
-    cartesian_points.color.r = 1.0f;
-    cartesian_points.color.a = 1.0;
+   // cartesian_points.scale.x = 0.05;
+   // cartesian_points.scale.y = 0.05;
+   // cartesian_points.color.r = 1.0f;
+   // cartesian_points.color.a = 1.0;
 
-    for (auto x: this->msg_t)  {
-      geometry_msgs::Point point;
-      point.x = x.x();
-      point.y = x.y();
-      point.z = 0;
-      cartesian_points.points.push_back(point);
-  }
+   // for (auto x: this->msg_t)  {
+   //   geometry_msgs::Point point;
+   //   point.x = x.x();
+   //   point.y = x.y();
+   //   point.z = 0;
+   //   cartesian_points.points.push_back(point);
+   // }
 
-  this->cartesian_points_pub.publish(cartesian_points);
+   //this->cartesian_points_pub.publish(cartesian_points);
     KDTree tree;
     tree.buildTree(this->msg_t);
     float error = 0;
@@ -51,14 +49,13 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
     // copy the prev_msg, as we plan on modifying the contents within the transformation loop:
     std::vector<Eigen::Vector3f> prev_msg_copy(this->msg_t_minus_1);
     for (size_t i = 0; i < prev_msg_copy.size(); i++) {
-      std::pair<KDNode*, float> neighbor = tree.nearestNeighbor(prev_msg_copy[i]);
-      // Total error accruel:
+      std::pair<KDNode*, float> neighbor = tree.icp_nearest_neighbor(prev_msg_copy[i]);
       error += neighbor.second;
     } 
     
     std::cout << "Initial Error: " << error << std::endl;
 
-    float error_threshold = 15;
+    float error_threshold = 5;
     bool error_is_decreasing = true;
 
     float error_copy = error + 1.0;
@@ -74,8 +71,8 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
     prev_scan.id = 0;
     prev_scan.type = visualization_msgs::Marker::POINTS;
 
-    prev_scan.scale.x = 0.1;
-    prev_scan.scale.y = 0.1;
+    prev_scan.scale.x = 0.05;
+    prev_scan.scale.y = 0.05;
     prev_scan.color.g = 1.0f;
     prev_scan.color.b = 1.0f;
     prev_scan.color.a = 1.0;
@@ -100,37 +97,12 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
       std::cout << "Transform: " << transformation.matrix() << std::endl;
       std::vector<Eigen::Vector3f> transformed_prev_msg = this->apply_transformation(prev_msg_copy,  transformation);
 
-      //lets visualize this transformed msg:
-      visualization_msgs::Marker transformed_scan;
-      transformed_scan.action = visualization_msgs::Marker::DELETEALL;
-      transformed_scan.header.frame_id = "scarab41/laser";
-      transformed_scan.ns = "centroids";
-      transformed_scan.action = visualization_msgs::Marker::ADD;
-      transformed_scan.pose.orientation.w = 1.0;
-      transformed_scan.id = 0;
-      transformed_scan.type = visualization_msgs::Marker::POINTS;
-
-      transformed_scan.scale.x = 0.1;
-      transformed_scan.scale.y = 0.1;
-      transformed_scan.color.g = 1.0f;
-      transformed_scan.color.a = 1.0;
-
-      for (auto x: transformed_prev_msg)  {
-        geometry_msgs::Point point;
-        point.x = x.x();
-        point.y = x.y();
-        point.z = 0;
-        transformed_scan.points.push_back(point);
-      }
-
-      this->transformed_scan_pub.publish(transformed_scan);
       float tracking_error=0;
 
       for (size_t i = 0; i < transformed_prev_msg.size(); i++) {
-        std::pair<KDNode*, float> loop_error = tree.nearestNeighbor(transformed_prev_msg[i]);
+        std::pair<KDNode*, float> loop_error = tree.icp_nearest_neighbor(transformed_prev_msg[i]);
         if (loop_error.second < 20) {
           tracking_error += loop_error.second;
-
         }
       } 
       std::cout << "tracking_error: " << tracking_error << std::endl;
@@ -147,6 +119,33 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
       }
     }
     std::cout << "Final Transformation: " << std::endl << final_transform.matrix() << std::endl;
+    //lets visualize this transformed msg:
+    std::vector<Eigen::Vector3f> transformed_prev_msg = this->apply_transformation(this->msg_t_minus_1,  final_transform);
+
+    visualization_msgs::Marker transformed_scan;
+    transformed_scan.action = visualization_msgs::Marker::DELETEALL;
+    transformed_scan.header.frame_id = "scarab41/laser";
+    transformed_scan.ns = "centroids";
+    transformed_scan.action = visualization_msgs::Marker::ADD;
+    transformed_scan.pose.orientation.w = 1.0;
+    transformed_scan.id = 0;
+    transformed_scan.type = visualization_msgs::Marker::POINTS;
+
+    transformed_scan.scale.x = 0.05;
+    transformed_scan.scale.y = 0.05;
+    transformed_scan.color.g = 1.0f;
+    transformed_scan.color.a = 1.0;
+
+    for (auto x: transformed_prev_msg)  {
+      geometry_msgs::Point point;
+      point.x = x.x();
+      point.y = x.y();
+      point.z = 0;
+      transformed_scan.points.push_back(point);
+    }
+
+    this->transformed_scan_pub.publish(transformed_scan);
+
 
   }
 }
