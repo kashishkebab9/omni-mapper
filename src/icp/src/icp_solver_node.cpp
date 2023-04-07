@@ -2,6 +2,7 @@
 
 void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
 {
+  std::cout << "Received Pointcloud!" << std::endl;
   this->msg_t_minus_1 = this->msg_t;
   this->msg_t.clear();
 
@@ -55,7 +56,7 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
     
     std::cout << "Initial Error: " << error << std::endl;
 
-    float error_threshold = 5;
+    float error_threshold = 10;
     bool error_is_decreasing = true;
 
     float error_copy = error + 1.0;
