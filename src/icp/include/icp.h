@@ -1,6 +1,7 @@
 #include <iterator>
 #include <math.h>
 #include <boost/bind/bind.hpp>
+#include <memory>
 #define _USE_MATH_DEFINES
 #include "ros/ros.h"
 #include <laser_geometry/laser_geometry.h>
@@ -15,6 +16,8 @@
 #include <eigen3/Eigen/Dense>
 #include <cmath>
 #include "KDTree.h"
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_ros/transform_broadcaster.h>
 
 class icp {
   public:
@@ -25,6 +28,8 @@ class icp {
       transformed_scan_pub = nh.advertise<visualization_msgs::Marker>("transformed_scan", 1);
       prev_scan_pub = nh.advertise<visualization_msgs::Marker>("prev_scan", 1);
       cartesian_points_pub = nh.advertise<visualization_msgs::Marker>("cartesian_points", 1);
+      tracking_tf.setIdentity();
+      
     }
 
     void pclCallback(const sensor_msgs::PointCloud::ConstPtr& msg);
@@ -33,6 +38,7 @@ class icp {
     std::vector<Eigen::Vector2f> make_prime_vec(std::vector<Eigen::Vector3f> msg, Eigen::Vector2f avg);
     std::vector<Eigen::Vector3f> apply_transformation(std::vector<Eigen::Vector3f> msg, Eigen::Matrix3f transformation);
     //laser_geometry::LaserProjection projector_;
+    Eigen::Matrix3f tracking_tf;
 
   
   private:

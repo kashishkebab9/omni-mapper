@@ -2,6 +2,8 @@
 
 void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
 {
+  static tf2_ros::TransformBroadcaster odom_broadcaster;
+
   std::cout << "Received Pointcloud!" << std::endl;
   this->msg_t_minus_1 = this->msg_t;
   this->msg_t.clear();
@@ -19,28 +21,6 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
   }
 
   if(this->enough_msgs) {
-    // lets publish markers to make sure this polar->cartesian transformation was successful
-   // visualization_msgs::Marker cartesian_points;
-   // cartesian_points.action = visualization_msgs::Marker::DELETEALL;
-   // cartesian_points.header.frame_id = "scarab41/laser";
-   // cartesian_points.ns = "cartesian";
-   // cartesian_points.action = visualization_msgs::Marker::ADD;
-   // cartesian_points.pose.orientation.w = 1.0;
-   // cartesian_points.id = 0;
-   // cartesian_points.type = visualization_msgs::Marker::POINTS;
-
-   // cartesian_points.scale.x = 0.05;
-   // cartesian_points.scale.y = 0.05;
-   // cartesian_points.color.r = 1.0f;
-   // cartesian_points.color.a = 1.0;
-
-   // for (auto x: this->msg_t)  {
-   //   geometry_msgs::Point point;
-   //   point.x = x.x();
-   //   point.y = x.y();
-   //   point.z = 0;
-   //   cartesian_points.points.push_back(point);
-   // }
 
    //this->cartesian_points_pub.publish(cartesian_points);
     KDTree tree;
@@ -144,9 +124,30 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
       point.z = 0;
       transformed_scan.points.push_back(point);
     }
-
     this->transformed_scan_pub.publish(transformed_scan);
 
+    this->tracking_tf = final_transform * this->tracking_tf;
+    //We want to publish this transformation to the icp_odom frame
+    tf::Matrix3x3 tfMatrix(tracking_tf(0,0), tracking_tf(0,1), tracking_tf(0,2),
+                       tracking_tf(1,0), tracking_tf(1,1), tracking_tf(1,2),
+                       tracking_tf(2,0), tracking_tf(2,1), tracking_tf(2,2));
+    tf::Quaternion tfQuaternion;
+    tfMatrix.getRotation(tfQuaternion);
+
+    geometry_msgs::TransformStamped icp_transform;
+    icp_transform.transform.rotation.x = tfQuaternion.x();
+    icp_transform.transform.rotation.y = tfQuaternion.y();
+    icp_transform.transform.rotation.z = tfQuaternion.z();
+    icp_transform.transform.rotation.w = tfQuaternion.w();
+    icp_transform.transform.translation.x = tracking_tf(0,2);
+    icp_transform.transform.translation.y = tracking_tf(1,2);
+    icp_transform.transform.translation.z = 0;
+
+    // Set the header of the TransformStamped
+    icp_transform.header.frame_id = "scarab41/map";
+    icp_transform.child_frame_id = "icp_odom";
+    icp_transform.header.stamp = ros::Time::now();
+    odom_broadcaster.sendTransform(icp_transform);
 
   }
 }
