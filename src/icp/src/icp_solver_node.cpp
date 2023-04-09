@@ -134,20 +134,22 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
     tf::Quaternion tfQuaternion;
     tfMatrix.getRotation(tfQuaternion);
 
-    geometry_msgs::TransformStamped icp_transform;
-    icp_transform.transform.rotation.x = tfQuaternion.x();
-    icp_transform.transform.rotation.y = tfQuaternion.y();
-    icp_transform.transform.rotation.z = tfQuaternion.z();
-    icp_transform.transform.rotation.w = tfQuaternion.w();
-    icp_transform.transform.translation.x = tracking_tf(0,2);
-    icp_transform.transform.translation.y = tracking_tf(1,2);
-    icp_transform.transform.translation.z = 0;
+    if (tfQuaternion.normalize()) {
+      geometry_msgs::TransformStamped icp_transform;
+      icp_transform.transform.rotation.x = tfQuaternion.x();
+      icp_transform.transform.rotation.y = tfQuaternion.y();
+      icp_transform.transform.rotation.z = tfQuaternion.z();
+      icp_transform.transform.rotation.w = tfQuaternion.w();
+      icp_transform.transform.translation.x = tracking_tf(0,2);
+      icp_transform.transform.translation.y = tracking_tf(1,2);
+      icp_transform.transform.translation.z = 0;
 
-    // Set the header of the TransformStamped
-    icp_transform.header.frame_id = "scarab41/map";
-    icp_transform.child_frame_id = "icp_odom";
-    icp_transform.header.stamp = ros::Time::now();
-    odom_broadcaster.sendTransform(icp_transform);
+      // Set the header of the TransformStamped
+      icp_transform.header.frame_id = "scarab41/map";
+      icp_transform.child_frame_id = "icp_odom";
+      icp_transform.header.stamp = ros::Time::now();
+      odom_broadcaster.sendTransform(icp_transform);
+    }
 
   }
 }
