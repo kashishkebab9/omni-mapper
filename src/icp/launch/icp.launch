@@ -2,10 +2,6 @@
 
     <node name="scan_to_pcl_node" pkg="icp" type="scan_converter" output="screen"></node>
     <node name="icp_solver_node" pkg="icp" type="icp_retry" output="screen"></node>
-
-
-
-
-
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find icp)/viz/icp.viz" />
 
 </launch>

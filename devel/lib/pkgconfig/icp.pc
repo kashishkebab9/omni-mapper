@@ -1,1 +1,0 @@
-/home/kash/robotics/omni-mapper/devel/.private/icp/lib/pkgconfig/icp.pc

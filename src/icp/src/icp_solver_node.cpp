@@ -33,10 +33,12 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
       std::pair<KDNode*, float> neighbor = tree.icp_nearest_neighbor(prev_msg_copy[i]);
       error += neighbor.second;
     } 
+
+    error = pow(error, 2)/prev_msg_copy.size();
     
     std::cout << "Initial Error: " << error << std::endl;
 
-    float error_threshold = 10;
+    float error_threshold = .001;
     bool error_is_decreasing = true;
 
     float error_copy = error + 1.0;
@@ -86,6 +88,8 @@ void icp::pclCallback(const sensor_msgs::PointCloud::ConstPtr&  msg)
           tracking_error += loop_error.second;
         }
       } 
+
+      tracking_error = pow(tracking_error, 2)/transformed_prev_msg.size();
       std::cout << "tracking_error: " << tracking_error << std::endl;
 
       if(error > tracking_error) {

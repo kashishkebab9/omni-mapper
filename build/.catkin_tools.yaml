@@ -1,6 +1,0 @@
-devel_space: /home/kash/robotics/omni-mapper/devel
-install: false
-install_space: /home/kash/robotics/omni-mapper/install
-profile: default
-source_space: /home/kash/robotics/omni-mapper/src
-workspace: /home/kash/robotics/omni-mapper
