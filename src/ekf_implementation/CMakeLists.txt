@@ -11,9 +11,21 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   geometry_msgs
   nav_msgs
+  message_generation
 )
 
-catkin_package()
+add_message_files(
+  FILES
+  encoder.msg
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
+
+
+catkin_package(CATKIN_DEPENDS message_generation)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 add_executable(ekf src/ekf_node.cpp)
