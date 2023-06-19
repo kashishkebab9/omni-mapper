@@ -10,10 +10,20 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   geometry_msgs
+  nav_msgs
 )
 
 catkin_package()
 
 include_directories(include ${catkin_INCLUDE_DIRS})
-add_executable(motion_model src/motion_command.cpp)
-target_link_libraries(motion_model ${catkin_LIBRARIES})
+add_executable(ekf src/ekf_node.cpp)
+target_link_libraries(ekf ${catkin_LIBRARIES})
+
+add_executable(sim_enc src/simulated_encoder.cpp)
+target_link_libraries(sim_enc ${catkin_LIBRARIES})
+
+add_executable(sim_enc_redo src/encoder_redo.cpp)
+target_link_libraries(sim_enc_redo ${catkin_LIBRARIES})
+
+add_executable(sim_enc_vel src/encoder_vel.cpp)
+target_link_libraries(sim_enc_vel ${catkin_LIBRARIES})
