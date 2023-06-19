@@ -54,8 +54,10 @@ class tb_sim_enc {
           float delta_t_float = delta_t.toSec();
           ROS_INFO("delta_t: %f", delta_t_float); 
 
-          auto rad_travelled_left = (this->prev_left * delta_t_float) + (left_wheel_ang_vel - this->prev_left)* delta_t_float/2;
-          auto rad_travelled_right = (this->prev_right * delta_t_float) + (right_wheel_ang_vel - this->prev_right)* delta_t_float/2;
+         // auto rad_travelled_left = (this->prev_left * delta_t_float) + (left_wheel_ang_vel - this->prev_left)* delta_t_float/2;
+         // auto rad_travelled_right = (this->prev_right * delta_t_float) + (right_wheel_ang_vel - this->prev_right)* delta_t_float/2;
+          auto rad_travelled_left = (this->prev_left + left_wheel_ang_vel)/2 * delta_t_float;
+          auto rad_travelled_right = (this->prev_right + right_wheel_ang_vel)/2 * delta_t_float;
           float deg_travelled_left = (rad_travelled_left * 180/M_PI);
           float deg_travelled_right = (rad_travelled_right * 180/M_PI);
 
