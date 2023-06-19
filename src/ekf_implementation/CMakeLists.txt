@@ -21,9 +21,3 @@ target_link_libraries(ekf ${catkin_LIBRARIES})
 
 add_executable(sim_enc src/simulated_encoder.cpp)
 target_link_libraries(sim_enc ${catkin_LIBRARIES})
-
-add_executable(sim_enc_redo src/encoder_redo.cpp)
-target_link_libraries(sim_enc_redo ${catkin_LIBRARIES})
-
-add_executable(sim_enc_vel src/encoder_vel.cpp)
-target_link_libraries(sim_enc_vel ${catkin_LIBRARIES})
