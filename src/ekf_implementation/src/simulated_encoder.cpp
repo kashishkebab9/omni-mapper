@@ -4,6 +4,8 @@
 #include <stdlib.h>     /* abs */
 #include <iostream>
 #include <ekf_implementation/encoder.h>
+#include <math.h>
+#define _USE_MATH_DEFINES
 
 class tb_sim_enc {
   public:
@@ -45,8 +47,8 @@ class tb_sim_enc {
 
           auto rad_travelled_left = (this->prev_left * delta_t_float) + (left_wheel_ang_vel - this->prev_left)* delta_t_float/2;
           auto rad_travelled_right = (this->prev_right * delta_t_float) + (right_wheel_ang_vel - this->prev_right)* delta_t_float/2;
-          float deg_travelled_left = (rad_travelled_left * 180/3.14);
-          float deg_travelled_right = (rad_travelled_right * 180/3.14);
+          float deg_travelled_left = (rad_travelled_left * 180/M_PI);
+          float deg_travelled_right = (rad_travelled_right * 180/M_PI);
 
           ROS_INFO("left radians travelled: %f radians", rad_travelled_left); 
           ROS_INFO("right radians travelled: %f radians", rad_travelled_right); 
