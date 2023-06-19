@@ -17,6 +17,7 @@ class ekf {
       this->dw = .144; // m
 
       pose_estimate << 0, 0, 0;
+      std::cout << "Pose estimate: " << pose_estimate.matrix() << std::endl;
       encoder_sub = this->nh.subscribe("/encoder_ticks", 1, &ekf::encoder_callback, this);
       laser_odom_sub = this->nh.subscribe("/scarab41/odom_laser", 1, &ekf::laser_callback, this);
 
@@ -56,8 +57,18 @@ void ekf::encoder_callback(const ekf_implementation::encoder::ConstPtr& msg) {
   ROS_INFO("Delta Theta: %f m", delta_theta);
   ROS_INFO("Delta Trans: %f m", delta_trans);
 
+  float x_estimate = this->pose_estimate.x() + delta_trans * cos(this->pose_estimate[2] + delta_theta/2) ;
+  float y_estimate = this->pose_estimate.y() + delta_trans * sin(this->pose_estimate[2] + delta_theta/2) ;
+  float theta_estimate = this->pose_estimate[2] + delta_theta;
+  while(theta_estimate > M_PI * 2) {
+    theta_estimate = theta_estimate - 2 * M_PI;
+  }
 
+  ROS_INFO("x estimate: %f m", x_estimate);
+  ROS_INFO("y estimate: %f m", y_estimate);
+  ROS_INFO("theta estimate: %f m", theta_estimate);
 
+  this->pose_estimate << x_estimate, y_estimate, theta_estimate;
 }
 
 void ekf::laser_callback(const nav_msgs::Odometry::ConstPtr& msg) {

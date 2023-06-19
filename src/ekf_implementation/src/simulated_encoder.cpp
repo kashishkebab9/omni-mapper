@@ -5,14 +5,23 @@
 #include <iostream>
 #include <ekf_implementation/encoder.h>
 #include <math.h>
+#include <thread>
 #define _USE_MATH_DEFINES
 
 class tb_sim_enc {
   public:
     tb_sim_enc() {
+      this->first_msg_sent = false;
       this->prev_left = 0.0;
       this->prev_right = 0.0;
-      this->prev_timestamp = ros::Time::now();
+
+      ROS_INFO("Waiting for first msg on /clock...");
+      ros::Duration thresh(.5);
+      ros::Time zero(0);
+      while(this->prev_timestamp - zero < thresh) {
+        this->prev_timestamp = ros::Time::now();
+      }
+
       ROS_INFO("Starting GetLinkState Service Client...");
       ros::ServiceClient client = nh.serviceClient<gazebo_msgs::GetLinkState>("/gazebo/get_link_state");
 
@@ -79,6 +88,7 @@ class tb_sim_enc {
     float prev_left;
     float prev_right;
     ros::Time prev_timestamp;
+    bool first_msg_sent;
     
 };
 
