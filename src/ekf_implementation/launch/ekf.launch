@@ -1,6 +1,6 @@
 <launch>
 
-    <node name="simulated_encoder" pkg="ekf_implementation" type="sim_enc"> </node>
+    <node name="simulated_encoder" pkg="ekf_implementation" type="sim_enc" output="screen"> </node>
     <node name="ekf_node" pkg="ekf_implementation" type="ekf" output="screen"></node>
 
 </launch>

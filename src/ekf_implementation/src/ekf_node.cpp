@@ -13,7 +13,7 @@ class ekf {
     ekf() {
 
       this->wheel_diameter = .066; // m
-      this->encoder_res = 360;
+      this->encoder_res = 360; //ticks/revolution
       this->dw = .144; // m
 
       pose_estimate << 0, 0, 0;

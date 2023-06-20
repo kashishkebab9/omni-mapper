@@ -64,12 +64,25 @@ class tb_sim_enc {
           ROS_INFO("left radians travelled: %f radians", rad_travelled_left); 
           ROS_INFO("right radians travelled: %f radians", rad_travelled_right); 
 
-          ROS_INFO("left encoder: %f ticks", floor(deg_travelled_left)); 
-          ROS_INFO("right encoder: %f ticks", floor(deg_travelled_right)); 
+          int deg_left;
+          int deg_right;
+          if (deg_travelled_left < 0) {
+            deg_left = ceil(deg_travelled_left);
+          } else {
+            deg_left = floor(deg_travelled_left);
+          }
+          
+          if (deg_travelled_right < 0) {
+            deg_right = ceil(deg_travelled_right);
+          } else {
+            deg_right = floor(deg_travelled_right);
+          }
+          ROS_INFO("left encoder: %i ticks", deg_left); 
+          ROS_INFO("right encoder: %i ticks", deg_right); 
 
           ekf_implementation::encoder encoder_msg;
-          encoder_msg.right_encoder = floor(deg_travelled_right);
-          encoder_msg.left_encoder = floor(deg_travelled_left);
+          encoder_msg.right_encoder = deg_right;
+          encoder_msg.left_encoder = deg_left;
           encoder_pub.publish(encoder_msg);
 
           this->prev_left = left_wheel_ang_vel;
