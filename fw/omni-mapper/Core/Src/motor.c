@@ -1,5 +1,7 @@
 #include "main.h"
+#include "timer.c"
 #include <stdint.h>
+
 
 
 // We will be using the SN7544 Dual H-Bridge Motor Driver
@@ -41,17 +43,25 @@ void SetUpMotorPwm(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af){
   GPIOx->OSPEEDR &~ (1 << (2 * pwm_pin + 1));
 
   /* 
-   * All Timers can run on Low Speed
+   * All Timers don't need a Pull up nor pull down resistor
    * Page 138 of 
    * https://www.newbiehack.com/Documents/STM32F030Reference.pdf
   */ 
 
-  GPIOx->OSPEEDR &~ (1 << (2 * pwm_pin)) ;
-  GPIOx->OSPEEDR &~ (1 << (2 * pwm_pin + 1));
+  GPIOx->PUPDR &~ (1 << (2 * pwm_pin)) ;
+  GPIOx->PUPDR &~ (1 << (2 * pwm_pin + 1));
 
 
   // Timer Specific Config
-  // We run the Processor Clock at 8Mhz
+  TIM_TypeDef *TIMx = get_timer_from_pin(GPIOx, pwm_pin, af);
+
+  // TODO: Check if TIMx is NULL   
+  
+  TIMx->PSC = 0;
+  TIMx->ARR = 139;
+  
+
+
 
 
 };
@@ -67,7 +77,7 @@ void SetUpMotorDir2(GPIO_TypeDef * GPIOx, uint8_t dir_2_pin, uint8_t af){
 
 
 };
-void SetUpMotor(GPIO_TypeDef * GPIOx, 
+void SetUpMotor(GPIO_TypeDef * port, 
                 uint8_t pwm_pin, 
                 uint8_t dir1_pin, 
                 uint8_t dir2_pin, 
@@ -76,7 +86,7 @@ void SetUpMotor(GPIO_TypeDef * GPIOx,
                 uint8_t dir2_af) {
   // TODO: Check for which port is required and set the AHBENR to it
 
-  SetUpMotorPwm(GPIOx, pwm_pin, pwm_af);
+  SetUpMotorPwm(port, pwm_pin, pwm_af);
   // SetUpMotorDir1(GPIOx, dir1_pin, dir1_af);
   // SetUpMotorDir2(GPIOx, dir2_pin, dir2_af);
 
