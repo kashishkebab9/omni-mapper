@@ -30,6 +30,15 @@ STM32_SRC = $(wildcard $(STM32_SRC_DIR)/*.c)
 STM32_OBJ_DIR = Core/Src
 STM32_OBJ = $(patsubst $(STM32_SRC_DIR)/%.c, $(STM32_OBJ_DIR)/%.o, $(STM32_SRC))
 
+# KL Abstraction Layer file Compilation
+STM32_KL_SRC_DIR = $(STM32_SRC_DIR)/kl_driver
+STM32_KL_SRC = $(wildcard $(STM32_KL_SRC_DIR)/*.c)
+$(info $(STM32_KL_SRC))
+STM32_KL_OBJ_DIR = Core/Src/kl_driver
+STM32_KL_OBJ = $(patsubst $(STM32_KL_SRC_DIR)/%.c, $(STM32_KL_OBJ_DIR)/%.o, $(STM32_KL_SRC))
+$(info $(STM32_KL_OBJ))
+$(info $(STM32_KL_OBJ_DIR))
+
 # Startup File Compilation
 STM32_STARTUP_DIR = $(STM32_PROJECT_ROOT_DIR)/Core/Startup
 STM32_STARTUP_FILE = $(wildcard $(STM32_STARTUP_DIR)/*.s)
@@ -90,6 +99,13 @@ $(STM32_OBJ_DIR)/%.o: $(STM32_SRC_DIR)/%.c | $(STM32_OBJ_DIR)
 $(STM32_OBJ_DIR):
 	mkdir -p $(STM32_OBJ_DIR)
 
+$(info Building STM32 KL Abstaction Layer...$(newline))
+$(STM32_KL_OBJ_DIR)/%.o: $(STM32_KL_SRC_DIR)/%.c | $(STM32_KL_OBJ_DIR)
+	$(CC) $(STM32_BOARD_BUILD) $(STM32_INCLUDE_FLAGS) $(STM32_COMP_FLAGS) -c $< -o $@
+
+$(STM32_KL_OBJ_DIR):
+	mkdir -p $(STM32_KL_OBJ_DIR)
+
 $(info Building STM32 Startup File...$(newline))
 $(STM32_STARTUP_OBJ_DIR)/%.o: $(STM32_STARTUP_DIR)/%.s | $(STM32_STARTUP_OBJ_DIR)
 	$(CC) $(STM32_BOARD_BUILD) $(STM32_STARTUP_FLAGS) -c $< -o $@
@@ -97,12 +113,11 @@ $(STM32_STARTUP_OBJ_DIR)/%.o: $(STM32_STARTUP_DIR)/%.s | $(STM32_STARTUP_OBJ_DIR
 $(STM32_STARTUP_OBJ_DIR):
 	mkdir -p $(STM32_STARTUP_OBJ_DIR)
 
-
-$(STM32_LINKER_ELF): $(STM32_HAL_DRIVERS_OBJ) $(STM32_OBJ) $(STM32_STARTUP_OBJ)
+$(STM32_LINKER_ELF): $(STM32_HAL_DRIVERS_OBJ) $(STM32_OBJ) $(STM32_STARTUP_OBJ) $(STM32_KL_OBJ)
 	$(CC) -o $(STM32_LINKER_ELF) @"$(STM32_LINKER_OBJECTS_LIST)" $(STM32_BOARD_BUILD) $(STM32_LINKER_FLAGS)
 
 clean:
-	rm -f $(STM32_LINKER_ELF) $(STM32_OBJ_DIR)/*.o $(STM32_HAL_DRIVERS_OBJ_DIR)/*.o $(STM32_STARTUP_OBJ_DIR)/*.o
+	rm -f $(STM32_LINKER_ELF) $(STM32_OBJ_DIR)/*.o $(STM32_HAL_DRIVERS_OBJ_DIR)/*.o $(STM32_STARTUP_OBJ_DIR)/*.o $(STM32_KL_OBJ_DIR)/*.o
 
 flash: $(TARGET).bin
 	st-flash write $(TARGET).bin 0x08000000 && st-flash reset

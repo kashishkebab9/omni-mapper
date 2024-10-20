@@ -1,5 +1,5 @@
 #include "main.h"
-#include "timer.c"
+#include "kl_driver/timer.c"
 #include <stdint.h>
 
 
@@ -24,6 +24,8 @@ void SetUpMotorPwm(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af){
 
   GPIOx->MODER &~ (1 << (2 * pwm_pin)) ;
   GPIOx->MODER |= (1 << (2 * pwm_pin + 1));
+
+  // TODO: Need to input the alternate function mode!
 
   /* 
    * All Timers are Output Push Pull
@@ -59,10 +61,6 @@ void SetUpMotorPwm(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af){
   
   TIMx->PSC = 0;
   TIMx->ARR = 139;
-  
-
-
-
 
 };
 
