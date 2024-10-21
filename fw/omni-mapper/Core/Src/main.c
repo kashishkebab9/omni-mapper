@@ -47,11 +47,6 @@ int main(void)
 
   // GPIOC->BSRR &~ GPIO_BSRR_BS_6;
 
-  // // Motor Setup!
-  // // Enable Bus for Port B
-  // RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
-  // RCC->APB2ENR |= RCC_APB2ENR_TIM15EN;
-
   SetupMotorPwm(GPIOA, 2, 0);
   SetupMotorPwm(GPIOA, 4, 4);
   SetupMotorPwm(GPIOA, 6, 5);
