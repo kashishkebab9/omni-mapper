@@ -4,6 +4,13 @@
 #include "main.h"
 #include <stdint.h>
 
+typedef struct {
+    TIM_TypeDef* timer;
+    volatile uint32_t* rcc_register;
+    uint8_t rcc_pin;
+} TimerToRccMap;
+
+extern TimerToRccMap timer_rcc_map[];
 // Forward declaration of the structure
 typedef struct {
     GPIO_TypeDef* port;

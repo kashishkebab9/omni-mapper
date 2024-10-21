@@ -28,12 +28,11 @@ int main(void)
   HAL_Init();
   SystemClock_Config();
 
-  // // Enable Bus for Port C
+  // Enable All Ports, we can consolidate later
   RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
-  RCC->APB2ENR |= (1<< 16);
-  RCC->APB2ENR |= (1<< 17);
-  RCC->APB2ENR |= (1<< 18);
-  RCC->APB1ENR |= (1<< 8);
+  RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
+  RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
+
   // // Mode Register
   // GPIOC->MODER |= GPIO_MODER_MODER6_0;
   // GPIOC->MODER &~ GPIO_MODER_MODER6_1;

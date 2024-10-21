@@ -1,5 +1,16 @@
 #include "timer.h"
 
+TimerToRccMap timer_rcc_map[] = {
+  {TIM1,  &RCC->APB2ENR,  11},
+  {TIM3,  &RCC->APB1ENR,   1},
+  {TIM6,  &RCC->APB1ENR,   4},
+//{TIM7,  &RCC->APB1ENR,   5}, // TIM7 Not being detected by compiler for some reason
+  {TIM14, &RCC->APB1ENR,  8},
+  {TIM15, &RCC->APB2ENR, 16},
+  {TIM16, &RCC->APB2ENR, 17},
+  {TIM17, &RCC->APB2ENR, 18},
+};
+
 PinToTimerMap pin_timer_map[] = {
   // Port A
   {GPIOA, 2, 0, TIM15},
@@ -20,6 +31,14 @@ PinToTimerMap pin_timer_map[] = {
   // Port C
   {GPIOC, 6, 0, TIM3},
 };
+
+void set_rcc_from_timer(TIM_TypeDef *TIMx) {
+  for (uint8_t i = 0; i< sizeof(timer_rcc_map)/sizeof(timer_rcc_map[0]); i++) {
+      if (timer_rcc_map[i].timer == TIMx) {
+          *(timer_rcc_map[i].rcc_register) |= (1 << timer_rcc_map[i].rcc_pin);
+      }
+  }
+}
 
 TIM_TypeDef* get_timer_from_pin(GPIO_TypeDef* port,
                                 uint8_t pin,
@@ -76,5 +95,6 @@ TIM_TypeDef* SetupTimer(GPIO_TypeDef * GPIOx,
   GPIOx->PUPDR &~ (1 << (2 * pwm_pin + 1));
 
   TIM_TypeDef *TIMx = get_timer_from_pin(GPIOx, pwm_pin, af);
+  set_rcc_from_timer(TIMx);
   return TIMx;
 }
