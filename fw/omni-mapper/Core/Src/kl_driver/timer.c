@@ -1,6 +1,4 @@
 #include "timer.h"
-#include "main.h"
-#include <stdint.h>
 
 PinToTimerMap pin_timer_map[] = {
   // Port A

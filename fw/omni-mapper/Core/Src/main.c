@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "motor.h"
 #include "timer.h"
 
 void SystemClock_Config(void);
@@ -49,35 +50,7 @@ int main(void)
   // RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
   // RCC->APB2ENR |= RCC_APB2ENR_TIM15EN;
 
-  TIM_TypeDef * TIMx = SetupTimer(GPIOA, 2, 0);
-
-  TIMx->CCR1 = 50;
-  TIMx->PSC = 7999;
-  TIMx->ARR = 100;
-
-  // Set CCMR1 as Output
-  TIMx->CCMR1 &~ (1 << 0); 
-  TIMx->CCMR1 &~ (1 << 1); 
-
-  // Active Polarity High
-  TIMx->CCER |= (1 << 1);
-
-  // PWM Mode
-  TIMx->CCMR1 |= (1 << 6);
-  TIMx->CCMR1 |= (1 << 5);
-  TIMx->CCMR1 &~ (1 << 4);
-
-  // Enable Compare Channel 1
-  TIMx->CCER |= (1 << 0);
-
-  // Initialize all Registers
-  TIMx->EGR |= (1 << 0);
-
-  // Enable output
-  TIMx->BDTR |= (1 << 15);
-
-  // 8MHZ / 8000 = 1000 cts/second
-  TIMx->CR1 |= (1 << 0);
+  SetupMotorPwm(GPIOA, 2, 0);
 
 
 
