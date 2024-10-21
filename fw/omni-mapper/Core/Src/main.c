@@ -18,8 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "motor.c"
-#include "kl_driver/timer.c"
+#include "timer.h"
 
 void SystemClock_Config(void);
 int main(void)
@@ -51,20 +50,33 @@ int main(void)
   // RCC->APB2ENR |= RCC_APB2ENR_TIM15EN;
 
   TIM_TypeDef * TIMx = SetupTimer(GPIOA, 2, 0);
+
+  TIMx->CCR1 = 50;
+  TIMx->PSC = 7999;
+  TIMx->ARR = 100;
+
   // Set CCMR1 as Output
   TIMx->CCMR1 &~ (1 << 0); 
   TIMx->CCMR1 &~ (1 << 1); 
+
+
+  // Active Polarity High
+  TIMx->CCER |= (1 << 1);
+
 
   // PWM Mode
   TIMx->CCMR1 |= (1 << 6);
   TIMx->CCMR1 |= (1 << 5);
   TIMx->CCMR1 &~ (1 << 4);
 
-  TIMx->CCR1 = 63;
+  // Enable Compare Channel 1
+  TIMx->CCER |= (1 << 0);
+
+  TIMx->EGR |= (1 << 0);
+  TIMx->BDTR |= (1 << 15);
+
   // 8MHZ / 8000 = 1000 cts/second
-  //
-  TIMx->PSC = 7999;
-  TIMx->ARR = 125;
+  TIMx->CR1 |= (1 << 0);
 
 
 

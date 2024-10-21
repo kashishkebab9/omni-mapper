@@ -1,41 +1,30 @@
-#ifndef TIMER_C
-#define TIMER_C
+#include "timer.h"
 #include "main.h"
 #include <stdint.h>
 
-// Map between port pin, timer and channel
-
-typedef struct {
-    GPIO_TypeDef* port;  // Pointer to the GPIO port (e.g., GPIOA, GPIOB)
-    uint16_t pin;        // GPIO pin number (e.g., GPIO_PIN_0, GPIO_PIN_1)
-    uint8_t af;          // AF mode required for the timer
-    TIM_TypeDef* timer;  // Associated timer (e.g., TIM1, TIM2)
-} PinToTimerMap;
-
 PinToTimerMap pin_timer_map[] = {
-
   // Port A
-  {GPIOA, GPIO_PIN_2, 0, TIM15},
-  {GPIOA, GPIO_PIN_4, 4, TIM14},
-  {GPIOA, GPIO_PIN_6, 1, TIM3},
-  {GPIOA, GPIO_PIN_6, 5, TIM16},
-  {GPIOA, GPIO_PIN_7, 4, TIM14},
-  {GPIOA, GPIO_PIN_7, 5, TIM17},
-  {GPIOA, GPIO_PIN_8, 2, TIM1},
+  {GPIOA, 2, 0, TIM15},
+  {GPIOA, 4, 4, TIM14},
+  {GPIOA, 6, 1, TIM3},
+  {GPIOA, 6, 5, TIM16},
+  {GPIOA, 7, 4, TIM14},
+  {GPIOA, 7, 5, TIM17},
+  {GPIOA, 8, 2, TIM1},
 
   // Port B
-  {GPIOB, GPIO_PIN_1, 0, TIM14},
-  {GPIOB, GPIO_PIN_4, 1, TIM3},
-  {GPIOB, GPIO_PIN_8, 2, TIM16},
-  {GPIOB, GPIO_PIN_9, 2, TIM17},
-  {GPIOB, GPIO_PIN_14, 1, TIM15},
+  {GPIOB, 1, 0, TIM14},
+  {GPIOB, 4, 1, TIM3},
+  {GPIOB, 8, 2, TIM16},
+  {GPIOB, 9, 2, TIM17},
+  {GPIOB, 14, 1, TIM15},
 
   // Port C
-  {GPIOC, GPIO_PIN_6, 0, TIM3},
+  {GPIOC, 6, 0, TIM3},
 };
 
 TIM_TypeDef* get_timer_from_pin(GPIO_TypeDef* port,
-                                uint16_t pin,
+                                uint8_t pin,
                                 uint8_t af) {
 
   for (uint8_t i = 0; i < sizeof(pin_timer_map)/sizeof(pin_timer_map[0]); i++) {
@@ -68,7 +57,7 @@ TIM_TypeDef* SetupTimer(GPIO_TypeDef * GPIOx,
    * https://www.newbiehack.com/Documents/STM32F030Reference.pdf
   */ 
 
-  GPIOx->OTYPER |= (0 << pwm_pin);
+  GPIOx->OTYPER &~ (1 << pwm_pin);
 
   /* 
    * All Timers can run on Low Speed
@@ -91,4 +80,3 @@ TIM_TypeDef* SetupTimer(GPIO_TypeDef * GPIOx,
   TIM_TypeDef *TIMx = get_timer_from_pin(GPIOx, pwm_pin, af);
   return TIMx;
 }
-#endif /* ifndef TIMER_C */
