@@ -1,3 +1,5 @@
+#ifndef TIMER_C
+#define TIMER_C
 #include "main.h"
 #include <stdint.h>
 
@@ -46,3 +48,47 @@ TIM_TypeDef* get_timer_from_pin(GPIO_TypeDef* port,
   }
   return NULL;
 }
+
+TIM_TypeDef* SetupTimer(GPIO_TypeDef * GPIOx, 
+                        uint8_t pwm_pin, 
+                        uint8_t af) {
+  GPIOx->MODER &~ (1 << (2 * pwm_pin)) ;
+  GPIOx->MODER |= (1 << (2 * pwm_pin + 1));
+
+  if (pwm_pin < 8) {
+    GPIOx->AFR[0] |= (af << pwm_pin*4);
+  } else {
+    GPIOx->AFR[1] |= (af << (pwm_pin - 8)*4);
+  }
+
+
+  /* 
+   * All Timers are Output Push Pull
+   * Page 137 of 
+   * https://www.newbiehack.com/Documents/STM32F030Reference.pdf
+  */ 
+
+  GPIOx->OTYPER |= (0 << pwm_pin);
+
+  /* 
+   * All Timers can run on Low Speed
+   * Page 138 of 
+   * https://www.newbiehack.com/Documents/STM32F030Reference.pdf
+  */ 
+
+  GPIOx->OSPEEDR &~ (1 << (2 * pwm_pin)) ;
+  GPIOx->OSPEEDR &~ (1 << (2 * pwm_pin + 1));
+
+  /* 
+   * All Timers don't need a Pull up nor pull down resistor
+   * Page 138 of 
+   * https://www.newbiehack.com/Documents/STM32F030Reference.pdf
+  */ 
+
+  GPIOx->PUPDR &~ (1 << (2 * pwm_pin)) ;
+  GPIOx->PUPDR &~ (1 << (2 * pwm_pin + 1));
+
+  TIM_TypeDef *TIMx = get_timer_from_pin(GPIOx, pwm_pin, af);
+  return TIMx;
+}
+#endif /* ifndef TIMER_C */

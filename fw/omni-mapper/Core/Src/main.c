@@ -19,7 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "motor.c"
-
+#include "kl_driver/timer.c"
 
 void SystemClock_Config(void);
 int main(void)
@@ -28,27 +28,46 @@ int main(void)
   HAL_Init();
   SystemClock_Config();
 
-  // Enable Bus for Port C
-  RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
-  // Mode Register
-  GPIOC->MODER |= GPIO_MODER_MODER6_0;
-  GPIOC->MODER &~ GPIO_MODER_MODER6_1;
-  // Output Type
-  GPIOC->OTYPER &~ GPIO_OTYPER_OT_6;
-  // Speed
-  GPIOC->OSPEEDR &~ GPIO_OSPEEDER_OSPEEDR6_0;
-
-  // pull up pull down
-  GPIOC->PUPDR &~ GPIO_PUPDR_PUPDR6_0;
-  GPIOC->PUPDR &~ GPIO_PUPDR_PUPDR6_1;
-
-  GPIOC->BSRR &~ GPIO_BSRR_BS_6;
-
-  // Motor Setup!
-  // Enable Bus for Port B
+  // // Enable Bus for Port C
   RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
-  RCC->APB2ENR |= RCC_APB2ENR_TIM15EN;
-  SetUpMotorPwm(GPIOA, 2, 0);
+  RCC->APB2ENR |= (1<< 16);
+  // // Mode Register
+  // GPIOC->MODER |= GPIO_MODER_MODER6_0;
+  // GPIOC->MODER &~ GPIO_MODER_MODER6_1;
+  // // Output Type
+  // GPIOC->OTYPER &~ GPIO_OTYPER_OT_6;
+  // // Speed
+  // GPIOC->OSPEEDR &~ GPIO_OSPEEDER_OSPEEDR6_0;
+
+  // // pull up pull down
+  // GPIOC->PUPDR &~ GPIO_PUPDR_PUPDR6_0;
+  // GPIOC->PUPDR &~ GPIO_PUPDR_PUPDR6_1;
+
+  // GPIOC->BSRR &~ GPIO_BSRR_BS_6;
+
+  // // Motor Setup!
+  // // Enable Bus for Port B
+  // RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
+  // RCC->APB2ENR |= RCC_APB2ENR_TIM15EN;
+
+  TIM_TypeDef * TIMx = SetupTimer(GPIOA, 2, 0);
+  // Set CCMR1 as Output
+  TIMx->CCMR1 &~ (1 << 0); 
+  TIMx->CCMR1 &~ (1 << 1); 
+
+  // PWM Mode
+  TIMx->CCMR1 |= (1 << 6);
+  TIMx->CCMR1 |= (1 << 5);
+  TIMx->CCMR1 &~ (1 << 4);
+
+  TIMx->CCR1 = 63;
+  // 8MHZ / 8000 = 1000 cts/second
+  //
+  TIMx->PSC = 7999;
+  TIMx->ARR = 125;
+
+
+
 
 
   while (1)
