@@ -51,13 +51,16 @@ int main(void)
   // RCC->APB2ENR |= RCC_APB2ENR_TIM15EN;
 
   SetupMotorPwm(GPIOA, 2, 0);
-
-
-
-
+  SetupMotorPwm(GPIOA, 4, 4);
+  SetupMotorPwm(GPIOA, 6, 5);
+  SetupMotorPwm(GPIOA, 7, 5);
 
   while (1)
   {
+
+    // SetDutyCycle(dc);
+    // HAL_Delay(20);
+    // dc++;
   }
   /* USER CODE END 3 */
 }

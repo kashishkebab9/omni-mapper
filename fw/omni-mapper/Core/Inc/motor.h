@@ -16,5 +16,6 @@ void SetupMotor(GPIO_TypeDef * port,
                 uint8_t dir2_af);
 
 
+void SetDutyCycle(uint8_t dc);
 
 #endif /* MOTOR_H */
