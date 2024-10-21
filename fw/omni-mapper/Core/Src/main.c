@@ -59,10 +59,8 @@ int main(void)
   TIMx->CCMR1 &~ (1 << 0); 
   TIMx->CCMR1 &~ (1 << 1); 
 
-
   // Active Polarity High
   TIMx->CCER |= (1 << 1);
-
 
   // PWM Mode
   TIMx->CCMR1 |= (1 << 6);
@@ -72,7 +70,10 @@ int main(void)
   // Enable Compare Channel 1
   TIMx->CCER |= (1 << 0);
 
+  // Initialize all Registers
   TIMx->EGR |= (1 << 0);
+
+  // Enable output
   TIMx->BDTR |= (1 << 15);
 
   // 8MHZ / 8000 = 1000 cts/second

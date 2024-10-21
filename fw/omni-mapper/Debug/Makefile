@@ -33,11 +33,8 @@ STM32_OBJ = $(patsubst $(STM32_SRC_DIR)/%.c, $(STM32_OBJ_DIR)/%.o, $(STM32_SRC))
 # KL Abstraction Layer file Compilation
 STM32_KL_SRC_DIR = $(STM32_SRC_DIR)/kl_driver
 STM32_KL_SRC = $(wildcard $(STM32_KL_SRC_DIR)/*.c)
-$(info $(STM32_KL_SRC))
 STM32_KL_OBJ_DIR = Core/Src/kl_driver
 STM32_KL_OBJ = $(patsubst $(STM32_KL_SRC_DIR)/%.c, $(STM32_KL_OBJ_DIR)/%.o, $(STM32_KL_SRC))
-$(info $(STM32_KL_OBJ))
-$(info $(STM32_KL_OBJ_DIR))
 
 # Startup File Compilation
 STM32_STARTUP_DIR = $(STM32_PROJECT_ROOT_DIR)/Core/Startup
