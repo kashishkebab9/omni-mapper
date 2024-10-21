@@ -31,6 +31,9 @@ int main(void)
   // // Enable Bus for Port C
   RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
   RCC->APB2ENR |= (1<< 16);
+  RCC->APB2ENR |= (1<< 17);
+  RCC->APB2ENR |= (1<< 18);
+  RCC->APB1ENR |= (1<< 8);
   // // Mode Register
   // GPIOC->MODER |= GPIO_MODER_MODER6_0;
   // GPIOC->MODER &~ GPIO_MODER_MODER6_1;
