@@ -11,7 +11,7 @@ typedef struct {
 } TimerToRccMap;
 
 extern TimerToRccMap timer_rcc_map[];
-// Forward declaration of the structure
+
 typedef struct {
     GPIO_TypeDef* port;
     uint8_t pin;
@@ -24,5 +24,7 @@ extern PinToTimerMap pin_timer_map[];
 // Function declarations
 TIM_TypeDef* get_timer_from_pin(GPIO_TypeDef* port, uint8_t pin, uint8_t af);
 TIM_TypeDef* SetupTimer(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af);
+
+void SetDutyCycle(TIM_TypeDef *TIMx, uint8_t dc);
 
 #endif /* TIMER_H */

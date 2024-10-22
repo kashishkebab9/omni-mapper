@@ -98,3 +98,8 @@ TIM_TypeDef* SetupTimer(GPIO_TypeDef * GPIOx,
   set_rcc_from_timer(TIMx);
   return TIMx;
 }
+
+void SetDutyCycle(TIM_TypeDef* TIMx, uint8_t duty_cycle) {
+  // Takes in Value 0-100 and sets the duty cycle Percent
+  TIMx->CCR1= duty_cycle;
+}

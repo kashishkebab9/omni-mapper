@@ -1,3 +1,4 @@
+#include "motor.h"
 #include "timer.h"
 #include "gpio.h"
 #include "stm32f0xx_hal.h"
@@ -11,6 +12,7 @@
 // PA4 -> Time14_CH1 AF4 :: Motor 2 EN (3,4EN)
 // PA6 -> Time16_CH1 AF5 :: Motor 3 EN (1,2EN)
 // PA7 -> Time17_CH1 AF5 :: Motor 4 EN (3,4EN)
+
 
 void SetupMotorPwm(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af){
   
@@ -52,31 +54,31 @@ void SetupMotorPwm(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af){
 void SetupMotorDir1(GPIO_TypeDef * GPIOx, uint8_t dir1_pin){
   
   SetupGpioOut(GPIOx, dir1_pin);
+  // test:
+  SetGpioOutOn(GPIOx, dir1_pin);
 
 }
 
 void SetupMotorDir2(GPIO_TypeDef * GPIOx, uint8_t dir2_pin){
 
   SetupGpioOut(GPIOx, dir2_pin);
+  // test:
+  SetGpioOutOn(GPIOx, dir2_pin);
 
 }
 
-void SetupMotor(GPIO_TypeDef * GPIOx_pwm, 
-                GPIO_TypeDef * GPIOx_dir,
-                uint8_t pwm_pin, 
-                uint8_t dir1_pin, 
-                uint8_t dir2_pin, 
-                uint8_t pwm_af) {
+void SetupMotor(MotorHandle motor_handle) {
   // TODO: Check for which port is required and set the AHBENR to it
 
-  SetupMotorPwm(GPIOx_pwm, pwm_pin, pwm_af);
-  SetupMotorDir1(GPIOx_dir, dir1_pin);
-  SetupMotorDir2(GPIOx_dir, dir2_pin);
+  SetupMotorPwm(motor_handle.GPIOx_pwm, motor_handle.pwm_pin, motor_handle.pwm_af);
+  SetupMotorDir1(motor_handle.GPIOx_dir, motor_handle.dir1_pin);
+  SetupMotorDir2(motor_handle.GPIOx_dir, motor_handle.dir2_pin);
   
 
 }
 
-void SetDutyCycle(TIM_TypeDef* TIMx, uint8_t duty_cycle) {
-  // Takes in Value 0-100 and sets the duty cycle
-  TIMx->CCR1= duty_cycle;
+void SetMotorDutyCycle() {
+}
+
+void SetMotorDirection(){
 }

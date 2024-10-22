@@ -4,9 +4,50 @@
 #include "gpio.h"
 
 void SystemClock_Config(void);
+
+void SetupMotors() {
+
+  MotorHandle motor_1;
+  motor_1.GPIOx_pwm = GPIOA;
+  motor_1.pwm_pin = 2;
+  motor_1.pwm_af = 0;
+  motor_1.GPIOx_dir = GPIOC;
+  motor_1.dir1_pin = 0;
+  motor_1.dir2_pin = 1;
+
+  MotorHandle motor_2;
+  motor_2.GPIOx_pwm = GPIOA;
+  motor_2.pwm_pin = 4;
+  motor_2.pwm_af = 4;
+  motor_2.GPIOx_dir = GPIOC;
+  motor_2.dir1_pin = 4;
+  motor_2.dir2_pin = 5;
+
+  MotorHandle motor_3;
+  motor_3.GPIOx_pwm = GPIOA;
+  motor_3.pwm_pin = 6;
+  motor_3.pwm_af = 5;
+  motor_3.GPIOx_dir = GPIOC;
+  motor_3.dir1_pin = 8;
+  motor_3.dir2_pin = 9;
+
+  MotorHandle motor_4;
+  motor_4.GPIOx_pwm = GPIOA;
+  motor_4.pwm_pin = 7;
+  motor_4.pwm_af = 5;
+  motor_4.GPIOx_dir = GPIOC;
+  motor_4.dir1_pin = 12;
+  motor_4.dir2_pin = 13;
+
+  SetupMotor(motor_1);
+  SetupMotor(motor_2);
+  SetupMotor(motor_3);
+  SetupMotor(motor_4);
+
+}
+
 int main(void)
 {
-
   HAL_Init();
   SystemClock_Config();
 
@@ -15,12 +56,8 @@ int main(void)
   RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
   RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
 
-  // SetupMotorPwm(GPIOA, 2, 0);
-  // SetupMotorPwm(GPIOA, 4, 4);
-  // SetupMotorPwm(GPIOA, 6, 5);
-  // SetupMotorPwm(GPIOA, 7, 5);
-  SetupMotor(GPIOA, GPIOC, 2, 0, 1, 0);
-  
+  // Setup the four motors for the omni-wheeled robot
+  SetupMotors();
 
   
 
