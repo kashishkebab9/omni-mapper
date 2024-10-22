@@ -5,15 +5,14 @@
 
 void SetupMotorPwm(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af);
 
-void SetupMotorDir1(GPIO_TypeDef * GPIOx, uint8_t dir1_pin, uint8_t af);
-void SetupMotorDir2(GPIO_TypeDef * GPIOx, uint8_t dir_2_pin, uint8_t af);
-void SetupMotor(GPIO_TypeDef * port, 
+void SetupMotorDir1(GPIO_TypeDef * GPIOx, uint8_t dir1_pin);
+void SetupMotorDir2(GPIO_TypeDef * GPIOx, uint8_t dir_2_pin);
+void SetupMotor(GPIO_TypeDef * pwm_port, 
+                GPIO_TypeDef * dir_port,
                 uint8_t pwm_pin, 
                 uint8_t dir1_pin, 
                 uint8_t dir2_pin, 
-                uint8_t pwm_af,
-                uint8_t dir1_af,
-                uint8_t dir2_af);
+                uint8_t pwm_af);
 
 
 void SetDutyCycle(uint8_t dc);

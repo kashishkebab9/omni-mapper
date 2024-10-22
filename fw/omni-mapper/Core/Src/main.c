@@ -15,14 +15,14 @@ int main(void)
   RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
   RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
 
-  SetupMotorPwm(GPIOA, 2, 0);
-  SetupMotorPwm(GPIOA, 4, 4);
-  SetupMotorPwm(GPIOA, 6, 5);
-  SetupMotorPwm(GPIOA, 7, 5);
+  // SetupMotorPwm(GPIOA, 2, 0);
+  // SetupMotorPwm(GPIOA, 4, 4);
+  // SetupMotorPwm(GPIOA, 6, 5);
+  // SetupMotorPwm(GPIOA, 7, 5);
+  SetupMotor(GPIOA, GPIOC, 2, 0, 1, 0);
+  
 
   
-  SetupGpioOut(GPIOC, 0);
-  SetGpioOutOn(GPIOC, 0);
 
   while (1)
   {
