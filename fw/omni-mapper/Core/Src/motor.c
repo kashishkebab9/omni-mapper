@@ -1,4 +1,5 @@
 #include "timer.h"
+#include "gpio.h"
 #include "stm32f0xx_hal.h"
 #include <stdint.h>
 
@@ -49,6 +50,7 @@ void SetupMotorPwm(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af){
 }
 
 void SetupMotorDir1(GPIO_TypeDef * GPIOx, uint8_t dir1_pin, uint8_t af){
+  
 
 }
 

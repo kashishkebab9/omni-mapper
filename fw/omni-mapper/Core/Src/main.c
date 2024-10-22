@@ -1,25 +1,7 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "motor.h"
 #include "timer.h"
+#include "gpio.h"
 
 void SystemClock_Config(void);
 int main(void)
@@ -33,33 +15,19 @@ int main(void)
   RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
   RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
 
-  // // Mode Register
-  // GPIOC->MODER |= GPIO_MODER_MODER6_0;
-  // GPIOC->MODER &~ GPIO_MODER_MODER6_1;
-  // // Output Type
-  // GPIOC->OTYPER &~ GPIO_OTYPER_OT_6;
-  // // Speed
-  // GPIOC->OSPEEDR &~ GPIO_OSPEEDER_OSPEEDR6_0;
-
-  // // pull up pull down
-  // GPIOC->PUPDR &~ GPIO_PUPDR_PUPDR6_0;
-  // GPIOC->PUPDR &~ GPIO_PUPDR_PUPDR6_1;
-
-  // GPIOC->BSRR &~ GPIO_BSRR_BS_6;
-
   SetupMotorPwm(GPIOA, 2, 0);
   SetupMotorPwm(GPIOA, 4, 4);
   SetupMotorPwm(GPIOA, 6, 5);
   SetupMotorPwm(GPIOA, 7, 5);
 
+  
+  SetupGpioOut(GPIOC, 0);
+  SetGpioOutOn(GPIOC, 0);
+
   while (1)
   {
 
-    // SetDutyCycle(dc);
-    // HAL_Delay(20);
-    // dc++;
   }
-  /* USER CODE END 3 */
 }
 
 void SystemClock_Config(void)
