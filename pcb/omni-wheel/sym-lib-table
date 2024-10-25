@@ -1,0 +1,5 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "SN74HCT74DR")(type "KiCad")(uri "${KIPRJMOD}/syms/SN74HCT74DR.kicad_sym")(options "")(descr ""))
+  (lib (name "SN74AC86DR")(type "KiCad")(uri "${KIPRJMOD}/syms/SN74AC86DR.kicad_sym")(options "")(descr ""))
+)
