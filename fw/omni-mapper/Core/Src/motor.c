@@ -73,7 +73,6 @@ void SetupMotor(MotorHandle motor_handle) {
   SetupMotorPwm(motor_handle.GPIOx_pwm, motor_handle.pwm_pin, motor_handle.pwm_af);
   SetupMotorDir1(motor_handle.GPIOx_dir, motor_handle.dir1_pin);
   SetupMotorDir2(motor_handle.GPIOx_dir, motor_handle.dir2_pin);
-  
 
 }
 
