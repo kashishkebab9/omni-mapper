@@ -1,4 +1,5 @@
 (fp_lib_table
   (version 7)
   (lib (name "SN74HCT74DR")(type "KiCad")(uri "${KIPRJMOD}/footprints/SN74HCT74DR/footprints.pretty")(options "")(descr ""))
+  (lib (name "SN74AC86DR")(type "KiCad")(uri "${KIPRJMOD}/footprints/SN74AC86DR/footprints.pretty")(options "")(descr ""))
 )
