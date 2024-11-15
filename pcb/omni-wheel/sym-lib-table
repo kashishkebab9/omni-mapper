@@ -2,4 +2,7 @@
   (version 7)
   (lib (name "SN74HCT74DR")(type "KiCad")(uri "${KIPRJMOD}/syms/SN74HCT74DR.kicad_sym")(options "")(descr ""))
   (lib (name "SN74AC86DR")(type "KiCad")(uri "${KIPRJMOD}/syms/SN74AC86DR.kicad_sym")(options "")(descr ""))
+  (lib (name "CD74HC04E")(type "KiCad")(uri "${KIPRJMOD}/syms/CD74HC04E.kicad_sym")(options "")(descr ""))
+  (lib (name "MAX6765TTLD2_T")(type "KiCad")(uri "${KIPRJMOD}/syms/MAX6765TTLD2_T.kicad_sym")(options "")(descr ""))
+  (lib (name "AP63301WU-7")(type "KiCad")(uri "${KIPRJMOD}/syms/AP63301WU-7.kicad_sym")(options "")(descr ""))
 )

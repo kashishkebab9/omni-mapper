@@ -2,4 +2,6 @@
   (version 7)
   (lib (name "SN74HCT74DR")(type "KiCad")(uri "${KIPRJMOD}/footprints/SN74HCT74DR/footprints.pretty")(options "")(descr ""))
   (lib (name "SN74AC86DR")(type "KiCad")(uri "${KIPRJMOD}/footprints/SN74AC86DR/footprints.pretty")(options "")(descr ""))
+  (lib (name "CD74HC04E")(type "KiCad")(uri "${KIPRJMOD}/footprints/CD74HC04E/footprints.pretty")(options "")(descr ""))
+  (lib (name "footprints")(type "KiCad")(uri "${KIPRJMOD}/footprints/AP63301WU-7/footprints.pretty")(options "")(descr ""))
 )
