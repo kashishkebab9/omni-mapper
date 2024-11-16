@@ -4115,6 +4115,12 @@
 		(uuid "7835d911-56ef-4d98-bed7-98166265e0e8")
 	)
 	(junction
+		(at 62.9052 131.424)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "826d3d0f-b286-4fac-8c3a-d865540adc53")
+	)
+	(junction
 		(at 108.0081 153.2124)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4296,6 +4302,16 @@
 	)
 	(wire
 		(pts
+			(xy 62.9052 131.424) (xy 62.9052 131.474)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0ddb092e-fd31-4cf0-9052-d894ada587df")
+	)
+	(wire
+		(pts
 			(xy 263.7566 96.0537) (xy 271.3766 96.0537)
 		)
 		(stroke
@@ -4413,6 +4429,26 @@
 			(type default)
 		)
 		(uuid "1cc755f8-73ff-4dcc-8237-233d1768e85a")
+	)
+	(wire
+		(pts
+			(xy 67.8024 128.87) (xy 67.8024 123.7454)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1efea917-2f24-4533-82e5-67cb8ad80e14")
+	)
+	(wire
+		(pts
+			(xy 67.8024 123.7454) (xy 64.9177 123.7454)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1f9b5c87-a921-4306-bf01-63745b5379b3")
 	)
 	(wire
 		(pts
@@ -4563,16 +4599,6 @@
 			(type default)
 		)
 		(uuid "3b5a9cde-bc7c-4e20-8bef-9d31927b6245")
-	)
-	(wire
-		(pts
-			(xy 17.9664 131.3814) (xy 17.9664 131.2701)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3bb19401-f0c8-408a-a38a-72e00895ece2")
 	)
 	(wire
 		(pts
@@ -4936,16 +4962,6 @@
 	)
 	(wire
 		(pts
-			(xy 60.1738 131.424) (xy 62.9052 131.424)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6e855b52-f0f4-4bb1-af31-3e0d187d44b8")
-	)
-	(wire
-		(pts
 			(xy 60.7522 74.9986) (xy 72.39 74.93)
 		)
 		(stroke
@@ -4973,6 +4989,16 @@
 			(type default)
 		)
 		(uuid "6fdb4f9a-5bb2-4213-919b-b18427c19818")
+	)
+	(wire
+		(pts
+			(xy 66.04 161.29) (xy 69.2919 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "71dee36c-a89f-456c-b53e-0f36c98322df")
 	)
 	(wire
 		(pts
@@ -5336,16 +5362,6 @@
 	)
 	(wire
 		(pts
-			(xy 16.5812 131.3814) (xy 17.9664 131.3814)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9d481268-3f0a-49e9-a417-0f04197724a6")
-	)
-	(wire
-		(pts
 			(xy 113.03 69.85) (xy 102.87 69.85)
 		)
 		(stroke
@@ -5436,6 +5452,16 @@
 	)
 	(wire
 		(pts
+			(xy 17.9664 131.2784) (xy 17.9664 131.2701)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b13453f0-671b-4560-b8a9-e888b1855c9b")
+	)
+	(wire
+		(pts
 			(xy 114.3 26.67) (xy 102.87 26.67)
 		)
 		(stroke
@@ -5496,13 +5522,13 @@
 	)
 	(wire
 		(pts
-			(xy 62.9052 131.41) (xy 62.9052 131.474)
+			(xy 69.2919 161.29) (xy 69.2919 165.9498)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "bad34aa3-c9e0-4053-bb41-01acc94cd84a")
+		(uuid "ba443a16-13ae-4323-b7f2-da4227b732c8")
 	)
 	(wire
 		(pts
@@ -5513,6 +5539,26 @@
 			(type default)
 		)
 		(uuid "bceeebfd-f2f3-4583-86d5-e03e18046b71")
+	)
+	(wire
+		(pts
+			(xy 15.9403 131.2784) (xy 17.9664 131.2784)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bd0dae4d-6516-4c5b-9bc9-1bcd6ab0605f")
+	)
+	(wire
+		(pts
+			(xy 60.1738 131.424) (xy 62.9052 131.424)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bf7adfa8-2881-4388-8be9-a08aaa8427b7")
 	)
 	(wire
 		(pts
@@ -5753,6 +5799,16 @@
 			(type default)
 		)
 		(uuid "db69f398-0f86-44b9-9bab-e462c9b8041f")
+	)
+	(wire
+		(pts
+			(xy 62.9052 131.41) (xy 62.9052 131.424)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dd1c1d5f-8d0d-46a5-94c3-25f37a97bb80")
 	)
 	(wire
 		(pts
@@ -9729,7 +9785,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+12V"
+		(property "Value" "+5V"
 			(at 91.3995 49.6806 0)
 			(effects
 				(font
@@ -9952,7 +10008,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+12V"
+		(property "Value" "+5V"
 			(at 91.7499 92.9462 0)
 			(effects
 				(font
@@ -10358,6 +10414,71 @@
 			(project ""
 				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
 					(reference "U6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 64.9177 123.7454 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8fe3e72d-dc4d-4f12-a7e1-1bd970a5184d")
+		(property "Reference" "#PWR02"
+			(at 64.9177 130.0954 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 64.9177 128.8254 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 64.9177 123.7454 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 64.9177 123.7454 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 64.9177 123.7454 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1cc80073-9bee-4cf9-b338-bd6cd1ea539e")
+		)
+		(instances
+			(project "omni-wheel"
+				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
+					(reference "#PWR02")
 					(unit 1)
 				)
 			)
@@ -10823,7 +10944,8 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 16.5812 131.3814 0)
+		(at 15.9403 131.2784 0)
+		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -10831,7 +10953,7 @@
 		(dnp no)
 		(uuid "b010dfc1-aad1-45be-b082-22b9651e8970")
 		(property "Reference" "#PWR032"
-			(at 16.5812 137.7314 0)
+			(at 15.9403 137.6284 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10840,7 +10962,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 18.6972 136.0543 0)
+			(at 13.8243 135.9513 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10849,7 +10971,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 16.5812 131.3814 0)
+			(at 15.9403 131.2784 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10858,7 +10980,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 16.5812 131.3814 0)
+			(at 15.9403 131.2784 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10867,7 +10989,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 16.5812 131.3814 0)
+			(at 15.9403 131.2784 0)
 			(effects
 				(font
 					(size 1.27 1.27)
