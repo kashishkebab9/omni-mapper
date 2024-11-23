@@ -8,10 +8,10 @@
 // Assumption is the two dir pins for one Motor are on the same port
 
 // The four pins for PWM I am thinking are:
-// PA2 -> Time15_CH1 AF0 :: Motor 1 EN (1,2EN)
-// PA4 -> Time14_CH1 AF4 :: Motor 2 EN (3,4EN)
-// PA6 -> Time16_CH1 AF5 :: Motor 3 EN (1,2EN)
-// PA7 -> Time17_CH1 AF5 :: Motor 4 EN (3,4EN)
+// PA2 (16) -> Time15_CH1 AF0 :: Motor 1 EN (1,2EN)
+// PA4 (20) -> Time14_CH1 AF4 :: Motor 2 EN (3,4EN)
+// PA6 (22) -> Time16_CH1 AF5 :: Motor 3 EN (1,2EN)
+// PA7 (23) -> Time17_CH1 AF5 :: Motor 4 EN (3,4EN)
 
 
 void SetupMotorPwm(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af){
