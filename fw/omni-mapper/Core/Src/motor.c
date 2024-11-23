@@ -59,20 +59,20 @@ void SetupMotorDir1(GPIO_TypeDef * GPIOx, uint8_t dir1_pin){
 
 }
 
-void SetupMotorDir2(GPIO_TypeDef * GPIOx, uint8_t dir2_pin){
-
-  SetupGpioOut(GPIOx, dir2_pin);
-  // test:
-  SetGpioOutOn(GPIOx, dir2_pin);
-
-}
+// void SetupMotorDir2(GPIO_TypeDef * GPIOx, uint8_t dir2_pin){
+// 
+//   SetupGpioOut(GPIOx, dir2_pin);
+//   // test:
+//   SetGpioOutOn(GPIOx, dir2_pin);
+// 
+// }
 
 void SetupMotor(MotorHandle motor_handle) {
   // TODO: Check for which port is required and set the AHBENR to it
 
   SetupMotorPwm(motor_handle.GPIOx_pwm, motor_handle.pwm_pin, motor_handle.pwm_af);
   SetupMotorDir1(motor_handle.GPIOx_dir, motor_handle.dir1_pin);
-  SetupMotorDir2(motor_handle.GPIOx_dir, motor_handle.dir2_pin);
+  // SetupMotorDir2(motor_handle.GPIOx_dir, motor_handle.dir2_pin);
 
 }
 
