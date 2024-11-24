@@ -10,7 +10,6 @@ typedef struct {
 
     GPIO_TypeDef* GPIOx_dir;
     uint8_t dir1_pin; 
-    uint8_t dir2_pin; 
 
     // GPIO_TypeDef* GPIOx_enc;
     // uint8_t enc_a_pin; 
@@ -21,7 +20,6 @@ typedef struct {
 void SetupMotor(MotorHandle motor_handle);
 void SetupMotorPwm(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af);
 void SetupMotorDir1(GPIO_TypeDef * GPIOx, uint8_t dir1_pin);
-void SetupMotorDir2(GPIO_TypeDef * GPIOx, uint8_t dir_2_pin);
 
 
 

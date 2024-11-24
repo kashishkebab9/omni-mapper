@@ -5,6 +5,13 @@
 
 void SystemClock_Config(void);
 
+void EnableAllPorts() {
+  // Enable All Ports, we can consolidate later
+  RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
+  RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
+  RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
+}
+
 void SetupMotors() {
 
   MotorHandle motor_1;
@@ -44,13 +51,17 @@ void SetupMotors() {
 
 int main(void)
 {
+  // TODO:
+  // [X] - Test PWMS
+  // [ ] - Test Dir Pins
+  // [ ] - Write uart HAL 
+  // [ ] - Test uart 
+  // 
+
   HAL_Init();
   SystemClock_Config();
+  EnableAllPorts();
 
-  // Enable All Ports, we can consolidate later
-  RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
-  RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
-  RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
 
   // Setup the four motors for the omni-wheeled robot
   SetupMotors();

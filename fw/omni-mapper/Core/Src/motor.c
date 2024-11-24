@@ -5,8 +5,6 @@
 #include <stdint.h>
 
 // We will be using the SN7544 Dual H-Bridge Motor Driver
-// Assumption is the two dir pins for one Motor are on the same port
-
 // The four pins for PWM I am thinking are:
 // PA4  (Pin 20) -> Time14_CH1 AF4 :: Motor 1 EN (3,4EN)
 // PB14 (Pin 36) -> Time15_CH1 AF0 :: Motor 2 EN (1,2EN)
