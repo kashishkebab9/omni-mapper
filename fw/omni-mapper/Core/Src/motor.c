@@ -8,17 +8,17 @@
 // Assumption is the two dir pins for one Motor are on the same port
 
 // The four pins for PWM I am thinking are:
-// PA2 (16) -> Time15_CH1 AF0 :: Motor 1 EN (1,2EN)
-// PA4 (20) -> Time14_CH1 AF4 :: Motor 2 EN (3,4EN)
-// PA6 (22) -> Time16_CH1 AF5 :: Motor 3 EN (1,2EN)
-// PA7 (23) -> Time17_CH1 AF5 :: Motor 4 EN (3,4EN)
+// PA4  (Pin 20) -> Time14_CH1 AF4 :: Motor 1 EN (3,4EN)
+// PB14 (Pin 36) -> Time15_CH1 AF0 :: Motor 2 EN (1,2EN)
+// PA6  (Pin 22) -> Time16_CH1 AF5 :: Motor 3 EN (1,2EN)
+// PA7  (Pin 23) -> Time17_CH1 AF5 :: Motor 4 EN (3,4EN)
 
 
 void SetupMotorPwm(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af){
   
   // TODO: Check if TIMx is NULL   
   
-  TIM_TypeDef * TIMx = SetupTimer(GPIOA, pwm_pin, af);
+  TIM_TypeDef * TIMx = SetupTimer(GPIOx, pwm_pin, af);
 
   // Settings for 0% duty cycle, change CCR1 for the duty cycle/speed required
   TIMx->CCR1 = 50;
@@ -54,25 +54,18 @@ void SetupMotorPwm(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af){
 void SetupMotorDir1(GPIO_TypeDef * GPIOx, uint8_t dir1_pin){
   
   SetupGpioOut(GPIOx, dir1_pin);
+
   // test:
   SetGpioOutOn(GPIOx, dir1_pin);
 
 }
 
-// void SetupMotorDir2(GPIO_TypeDef * GPIOx, uint8_t dir2_pin){
-// 
-//   SetupGpioOut(GPIOx, dir2_pin);
-//   // test:
-//   SetGpioOutOn(GPIOx, dir2_pin);
-// 
-// }
 
 void SetupMotor(MotorHandle motor_handle) {
   // TODO: Check for which port is required and set the AHBENR to it
 
   SetupMotorPwm(motor_handle.GPIOx_pwm, motor_handle.pwm_pin, motor_handle.pwm_af);
   SetupMotorDir1(motor_handle.GPIOx_dir, motor_handle.dir1_pin);
-  // SetupMotorDir2(motor_handle.GPIOx_dir, motor_handle.dir2_pin);
 
 }
 

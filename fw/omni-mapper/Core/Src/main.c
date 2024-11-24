@@ -9,35 +9,31 @@ void SetupMotors() {
 
   MotorHandle motor_1;
   motor_1.GPIOx_pwm = GPIOA;
-  motor_1.pwm_pin = 2;
-  motor_1.pwm_af = 0;
+  motor_1.pwm_pin = 4;
+  motor_1.pwm_af = 4;
   motor_1.GPIOx_dir = GPIOC;
-  motor_1.dir1_pin = 0;
-  motor_1.dir2_pin = 1;
+  motor_1.dir1_pin = 3;
 
   MotorHandle motor_2;
-  motor_2.GPIOx_pwm = GPIOA;
-  motor_2.pwm_pin = 4;
-  motor_2.pwm_af = 4;
+  motor_2.GPIOx_pwm = GPIOB;
+  motor_2.pwm_pin = 14;
+  motor_2.pwm_af = 1;
   motor_2.GPIOx_dir = GPIOC;
-  motor_2.dir1_pin = 4;
-  motor_2.dir2_pin = 5;
+  motor_2.dir1_pin = 2;
 
   MotorHandle motor_3;
   motor_3.GPIOx_pwm = GPIOA;
   motor_3.pwm_pin = 6;
   motor_3.pwm_af = 5;
   motor_3.GPIOx_dir = GPIOC;
-  motor_3.dir1_pin = 8;
-  motor_3.dir2_pin = 9;
+  motor_3.dir1_pin = 1;
 
   MotorHandle motor_4;
   motor_4.GPIOx_pwm = GPIOA;
   motor_4.pwm_pin = 7;
   motor_4.pwm_af = 5;
   motor_4.GPIOx_dir = GPIOC;
-  motor_4.dir1_pin = 12;
-  motor_4.dir2_pin = 13;
+  motor_4.dir1_pin = 0;
 
   SetupMotor(motor_1);
   SetupMotor(motor_2);
