@@ -22,6 +22,7 @@
 
 #include "uart.h"
 #include <stdint.h>
+#include <string.h>
 
 // There are only two UART peripherals that we can use on this mcu
 // No need to map things, we can just have two functions to set up each of these
@@ -29,9 +30,8 @@
 // PA10 (Pin 43) -> USART1_RX AF1 :: RC TX
 // PA2  (Pin 16) -> USART2_TX AF1 :: RaspberryPi RX
 // PA3  (Pin 17) -> USART2_RX AF1 :: RaspberryPi TX
- 
 
-USART_TypeDef* SetupUartRc(GPIO_TypeDef* GPIOx, uint8_t rx_pin, uint8_t tx_pin) {
+USART_TypeDef* SetupUartRc() {
 
   // All ports get enabled in main()
   // RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
@@ -87,7 +87,7 @@ USART_TypeDef* SetupUartRc(GPIO_TypeDef* GPIOx, uint8_t rx_pin, uint8_t tx_pin) 
    * BRR
    * Our Clock rate is 8MHz
    * We want to oversample by 16. Meaning the RX line will sample 16x more the baudrate
-   * Baud = 115200
+   *Baud = 115200
    * Clock = 8,000,000
    * USART_DIV = 8,000,000/115200
    * USART_DIV = 69.4 => 69
@@ -120,14 +120,34 @@ USART_TypeDef* SetupUartRc(GPIO_TypeDef* GPIOx, uint8_t rx_pin, uint8_t tx_pin) 
   return USART1;
 }
 
-USART_TypeDef* SetupUartRpi(GPIO_TypeDef* GPIOx, uint8_t rx_pin, uint8_t tx_pin) {
+USART_TypeDef* SetupUartRpi() {
   return USART2;
 }
 
-void ReceiveUart(USART_TypeDef USARTx) {
+void ReceiveUart(USART_TypeDef* USARTx) {
+
 }
 
-void TransmitUart(USART_TypeDef USARTx, char* string_tx) {
+void TransmitUart(USART_TypeDef* USARTx, char* string_tx) {
+  USARTx->CR2 &~ USART_CR2_STOP_0;
+  USARTx->CR2 &~ USART_CR2_STOP_1;
+
+  // Enable the USART by writing the UE bit in USART_CR1 register to 1
+  USARTx->CR1 |= (1<<0);
+
+  // Set the TE bit in USART_CR1 to send an idle frame as first transmission.
+  USARTx->CR1 |= (1<<3);
+  USARTx->CR3 = 0x00;
+
+  int send = 0;
+
+  while(1) {
+	  if (send == (int)strlen(string_tx)){
+      return;
+	  }
+	  USARTx->TDR = string_tx[send++];
+	  while(!(USARTx->ISR & 1<<6));
+  }
 
 }
 

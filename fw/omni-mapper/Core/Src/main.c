@@ -22,6 +22,7 @@
 
 #include "main.h"
 #include "motor.h"
+#include "uart.h"
 #include "timer.h"
 #include "gpio.h"
 
@@ -68,30 +69,27 @@ void SetupMotors() {
   SetupMotor(motor_2);
   SetupMotor(motor_3);
   SetupMotor(motor_4);
-
 }
 
-int main(void)
+int main()
 {
-  // TODO:
-  // [X] - Test PWMS
-  // [ ] - Test Dir Pins
-  // [ ] - Write uart HAL 
-  // [ ] - Test uart 
-  // 
 
   HAL_Init();
   SystemClock_Config();
   EnableAllPorts();
 
+  // Setup UART Comms
+  USART_TypeDef* UART_RC = SetupUartRc();
 
   // Setup the four motors for the omni-wheeled robot
   SetupMotors();
 
-  
+  char string_tx[] = "Hello kash";
 
   while (1)
   {
+    
+    TransmitUart(UART_RC, string_tx);
 
   }
 }

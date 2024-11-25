@@ -26,7 +26,9 @@
 #include "main.h"
 #include <stdint.h>
 
-USART_TypeDef* SetupUartRc(GPIO_TypeDef* GPIOx, uint8_t rx_pin, uint8_t tx_pin);
-USART_TypeDef* SetupUartRpi(GPIO_TypeDef* GPIOx, uint8_t rx_pin, uint8_t tx_pin);
+USART_TypeDef* SetupUartRc();
+USART_TypeDef* SetupUartRpi();
+void ReceiveUart(USART_TypeDef* USARTx); 
+void TransmitUart(USART_TypeDef* USARTx, char* string_tx);
 
-#endif
+#endif /* UART_H */
