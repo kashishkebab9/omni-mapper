@@ -26,7 +26,11 @@
 #include "timer.h"
 #include "gpio.h"
 
+#define TRANSMIT_UART(msg) TransmitUart(UART_RPi, msg)
+
 void SystemClock_Config(void);
+
+// TODO: Test Encoder input handling, Interrupts
 
 void EnableAllPorts() {
   // Enable All Ports, we can consolidate later
@@ -69,7 +73,7 @@ void SetupMotors() {
   SetupMotor(motor_2);
   SetupMotor(motor_3);
   SetupMotor(motor_4);
-}
+}le
 
 int main()
 {
@@ -84,12 +88,13 @@ int main()
   // Setup the four motors for the omni-wheeled robot
   SetupMotors();
 
-  char string_tx[] = "Hello kash";
+  // TODO: Test SetMotorDutyCycle 
+
 
   while (1)
   {
     
-    TransmitUart(UART_RPi, string_tx);
+    TRANSMIT_UART("Hello Kash");
 
   }
 }

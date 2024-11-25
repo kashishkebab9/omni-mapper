@@ -41,9 +41,9 @@ void SetupMotorPwm(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af){
   TIM_TypeDef * TIMx = SetupTimer(GPIOx, pwm_pin, af);
 
   // Settings for 0% duty cycle, change CCR1 for the duty cycle/speed required
-  TIMx->CCR1 = 50;
-  TIMx->PSC = 7999;
-  TIMx->ARR = 100;
+  TIMx->CCR1 = 21;
+  TIMx->PSC = 8000;
+  TIMx->ARR = 20;
 
   // Set CCMR1 as Output
   TIMx->CCMR1 &~ (1 << 0); 
@@ -82,14 +82,33 @@ void SetupMotorDir1(GPIO_TypeDef * GPIOx, uint8_t dir1_pin){
 
 
 void SetupMotor(MotorHandle motor_handle) {
-  // TODO: Check for which port is required and set the AHBENR to it
 
   SetupMotorPwm(motor_handle.GPIOx_pwm, motor_handle.pwm_pin, motor_handle.pwm_af);
   SetupMotorDir1(motor_handle.GPIOx_dir, motor_handle.dir1_pin);
 
 }
 
-void SetMotorDutyCycle() {
+void SetMotorDutyCycle(MotorHandle motor_handle, uint8_t pwm) {
+  // Input a percentage (0- 100)
+  // TODO: Set ErrorHandler if pwm is out of bounds
+  
+  TIM_TypeDef *TIMx = get_timer_from_pin(motor_handle.GPIOx_pwm, motor_handle.pwm_pin, motor_handle.pwm_af);
+
+  if (pwm == 0) {
+    TIMx->CCR1 = 21;
+
+  } else {
+
+    // x / 100 = y / 20
+    // 20x = 100y
+    // .2x = y
+
+    pwm /= (int)pwm/5;
+    TIMx->CCR1 = pwm;
+
+  }
+
+
 }
 
 void SetMotorDirection(){
