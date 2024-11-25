@@ -121,6 +121,89 @@ USART_TypeDef* SetupUartRc() {
 }
 
 USART_TypeDef* SetupUartRpi() {
+  // All ports get enabled in main()
+  // RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
+  
+  /* 
+   * Enable the USART1 Peripheral in RCC
+   * Page 114 of 
+   * https://www.newbiehack.com/Documents/STM32F030Reference.pdf
+  */ 
+  RCC->APB1ENR |= (1 << 17);
+
+  /* 
+   * Alternate Pin Mode
+   * Page 137 of 
+   * https://www.newbiehack.com/Documents/STM32F030Reference.pdf
+   * and Page 34 of 
+   * https://www.st.com/content/ccc/resource/technical/document/datasheet/a4/5d/0b/0e/87/c4/4d/71/DM00088500.pdf/files/DM00088500.pdf/jcr:content/translations/en.DM00088500.pdf
+  */ 
+  GPIOA->MODER |= (1 << 7);
+  GPIOA->MODER &~ (1 << 6);
+  GPIOA->MODER |= (1 << 5);
+  GPIOA->MODER &~ (1 << 4);
+
+  /* 
+   * Actual Alternate Function Number (AF1) for both Pin 9 and 10
+   * Page 142 of 
+   * https://www.newbiehack.com/Documents/STM32F030Reference.pdf
+  */ 
+  GPIOA->AFR[0] &~ (1 << 11);
+  GPIOA->AFR[0] &~ (1 << 10);
+  GPIOA->AFR[0] &~ (1 << 9);
+  GPIOA->AFR[0] |= (1 << 8);
+
+  GPIOA->AFR[0] &~ (1 << 15);
+  GPIOA->AFR[0] &~ (1 << 14);
+  GPIOA->AFR[0] &~ (1 << 13);
+  GPIOA->AFR[0] |= (1 << 12);
+
+  /* 
+   * Program the M0 and M1 Bit in the USART CR1
+   * 00 for 8 bit word length
+   * Disable USART while we configure          
+   * Page 623 of 
+   * https://www.newbiehack.com/Documents/STM32F030Reference.pdf
+  */ 
+
+  USART2->CR1 = 0x00000000;
+  USART2->CR1 &~ (1 << 12);
+  USART2->CR1 &~ (1 << 28);
+  USART2->CR1 &~ (1 << 0);
+
+  /* 
+   * BRR
+   * Our Clock rate is 8MHz
+   * We want to oversample by 16. Meaning the RX line will sample 16x more the baudrate
+   *Baud = 115200
+   * Clock = 8,000,000
+   * USART_DIV = 8,000,000/115200
+   * USART_DIV = 69.4 => 69
+   * Page 631 of 
+   * https://www.newbiehack.com/Documents/STM32F030Reference.pdf
+  */ 
+
+  uint32_t reg = USART2->BRR;
+  reg |= 69;
+  USART2->BRR = reg;
+
+  /* 
+   * Program the Number of Stop Bits in USART CR2
+   * minicom uses 1 stop bit by default
+   * Page 142 of 
+   * https://www.newbiehack.com/Documents/STM32F030Reference.pdf
+  */ 
+
+  USART2->CR2 &~ (1 << 13);
+  USART2->CR2 &~ (1 << 12);
+
+  /* 
+   * Enable the USART by writing the UE bit in USART_CR1 register to 1
+   * minicom uses 1 stop bit by default
+   * Page 623 of 
+   * https://www.newbiehack.com/Documents/STM32F030Reference.pdf
+  */ 
+  USART2->CR1 |= (1<<0);
   return USART2;
 }
 

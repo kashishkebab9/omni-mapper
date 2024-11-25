@@ -79,7 +79,7 @@ int main()
   EnableAllPorts();
 
   // Setup UART Comms
-  USART_TypeDef* UART_RC = SetupUartRc();
+  USART_TypeDef* UART_RPi = SetupUartRpi();
 
   // Setup the four motors for the omni-wheeled robot
   SetupMotors();
@@ -89,7 +89,7 @@ int main()
   while (1)
   {
     
-    TransmitUart(UART_RC, string_tx);
+    TransmitUart(UART_RPi, string_tx);
 
   }
 }
