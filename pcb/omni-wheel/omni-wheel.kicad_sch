@@ -3956,6 +3956,139 @@
 				)
 			)
 		)
+		(symbol "Switch:SW_SPST"
+			(pin_names
+				(offset 0) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "SW"
+				(at 0 3.175 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "SW_SPST"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Single Pole Single Throw (SPST) switch"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "switch lever"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "SW_SPST_0_0"
+				(circle
+					(center -2.032 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.524 0.254) (xy 1.524 1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.032 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "SW_SPST_1_1"
+				(pin passive line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 0 180)
+					(length 2.54)
+					(name "B"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "power:+3.3V"
 			(power)
 			(pin_numbers hide)
@@ -4264,12 +4397,6 @@
 		(uuid "826d3d0f-b286-4fac-8c3a-d865540adc53")
 	)
 	(junction
-		(at 108.0081 153.2124)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "99951241-a97f-4e39-8aea-b4e8939b9b45")
-	)
-	(junction
 		(at 36.6238 131.3227)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4292,6 +4419,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "c0dd609c-222e-49ed-a8a6-f33fc9e092d6")
+	)
+	(junction
+		(at 107.9367 153.2124)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "c59a5dab-5cbc-4595-8c30-e9abd3c929a9")
 	)
 	(junction
 		(at 40.2086 131.424)
@@ -4565,6 +4698,16 @@
 	)
 	(wire
 		(pts
+			(xy 107.9367 153.0734) (xy 107.9367 153.2124)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "07a5f6d3-6e46-4826-9c7c-6c22f28db3cb")
+	)
+	(wire
+		(pts
 			(xy 261.62 81.28) (xy 247.65 81.28)
 		)
 		(stroke
@@ -4575,7 +4718,7 @@
 	)
 	(wire
 		(pts
-			(xy 106.8114 155.7524) (xy 106.8114 155.7504)
+			(xy 121.5026 155.4892) (xy 121.5026 157.4674)
 		)
 		(stroke
 			(width 0)
@@ -4675,6 +4818,16 @@
 	)
 	(wire
 		(pts
+			(xy 109.5117 153.0734) (xy 107.9367 153.0734)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1680228b-8423-4ee5-a47c-c6595a188f78")
+	)
+	(wire
+		(pts
 			(xy 26.8028 27.4815) (xy 45.8528 27.4815)
 		)
 		(stroke
@@ -4752,6 +4905,16 @@
 			(type default)
 		)
 		(uuid "1f9b5c87-a921-4306-bf01-63745b5379b3")
+	)
+	(wire
+		(pts
+			(xy 107.9367 153.2124) (xy 108.0081 153.2124)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2078e3ef-7936-459b-abd9-6346282e3734")
 	)
 	(wire
 		(pts
@@ -6045,6 +6208,16 @@
 	)
 	(wire
 		(pts
+			(xy 119.6717 153.0734) (xy 121.6382 153.0734)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ba3a4087-d405-4468-b511-508de4147afa")
+	)
+	(wire
+		(pts
 			(xy 69.2919 161.29) (xy 69.2919 165.9498)
 		)
 		(stroke
@@ -6205,16 +6378,6 @@
 	)
 	(wire
 		(pts
-			(xy 108.0081 153.2124) (xy 110.4721 153.2124)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cad540e0-dfe7-47d9-85f6-d62130911c81")
-	)
-	(wire
-		(pts
 			(xy 54.0433 168.5038) (xy 51.5309 168.5038)
 		)
 		(stroke
@@ -6245,7 +6408,7 @@
 	)
 	(wire
 		(pts
-			(xy 110.4721 155.7524) (xy 106.8114 155.7524)
+			(xy 121.5026 155.4892) (xy 121.6382 155.4892)
 		)
 		(stroke
 			(width 0)
@@ -6415,6 +6578,16 @@
 	)
 	(wire
 		(pts
+			(xy 121.6382 153.0734) (xy 121.6382 152.9492)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e1b1834f-9a5f-4455-a9f9-c8260e97d124")
+	)
+	(wire
+		(pts
 			(xy 261.62 76.2) (xy 247.65 76.2)
 		)
 		(stroke
@@ -6475,7 +6648,7 @@
 	)
 	(wire
 		(pts
-			(xy 101.9818 153.2124) (xy 108.0081 153.2124)
+			(xy 101.9818 153.2124) (xy 107.9367 153.2124)
 		)
 		(stroke
 			(width 0)
@@ -17486,7 +17659,7 @@
 	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x02")
-		(at 115.5521 153.2124 0)
+		(at 126.7182 152.9492 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -17495,7 +17668,7 @@
 		(fields_autoplaced yes)
 		(uuid "44ff0708-0846-40e9-ac91-64eaff0d9095")
 		(property "Reference" "J7"
-			(at 118.6738 153.2123 0)
+			(at 129.8399 152.9491 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17504,7 +17677,7 @@
 			)
 		)
 		(property "Value" "12V Input"
-			(at 118.6738 155.7523 0)
+			(at 129.8399 155.4891 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17512,8 +17685,8 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_AMASS:AMASS_XT60PW-M_1x02_P7.20mm_Horizontal"
-			(at 115.5521 153.2124 0)
+		(property "Footprint" "Connector_AMASS:AMASS_XT30PW-M_1x02_P2.50mm_Horizontal"
+			(at 126.7182 152.9492 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17522,7 +17695,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 115.5521 153.2124 0)
+			(at 126.7182 152.9492 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17531,7 +17704,7 @@
 			)
 		)
 		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
-			(at 115.5521 153.2124 0)
+			(at 126.7182 152.9492 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19434,6 +19607,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Switch:SW_SPST")
+		(at 114.5917 153.0734 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "721a8c68-1aa8-459c-bacb-1fcaf2d6b231")
+		(property "Reference" "SW1"
+			(at 114.411 150.7407 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "SW_SPST"
+			(at 114.411 148.2007 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "GF-123-0054:SW_GF-123-0054"
+			(at 114.5917 153.0734 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 114.5917 153.0734 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Single Pole Single Throw (SPST) switch"
+			(at 114.5917 153.0734 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "7184b812-2a3e-478c-8d77-ea58cc92983b")
+		)
+		(pin "1"
+			(uuid "de003f2a-fb05-45b2-bba5-26483ca287aa")
+		)
+		(instances
+			(project ""
+				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
+					(reference "SW1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3.3V")
 		(at 134.3015 190.2313 180)
 		(unit 1)
@@ -21016,7 +21256,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 106.8114 155.7504 0)
+		(at 121.5026 157.4674 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -21025,7 +21265,7 @@
 		(fields_autoplaced yes)
 		(uuid "b1d4d5e6-501f-4c89-a5f3-601b0f260623")
 		(property "Reference" "#PWR019"
-			(at 106.8114 162.1004 0)
+			(at 121.5026 163.8174 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21034,7 +21274,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 106.8114 160.8157 0)
+			(at 121.5026 162.5327 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21042,7 +21282,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 106.8114 155.7504 0)
+			(at 121.5026 157.4674 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21051,7 +21291,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 106.8114 155.7504 0)
+			(at 121.5026 157.4674 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21060,7 +21300,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 106.8114 155.7504 0)
+			(at 121.5026 157.4674 0)
 			(effects
 				(font
 					(size 1.27 1.27)
