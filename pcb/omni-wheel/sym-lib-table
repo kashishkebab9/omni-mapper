@@ -5,4 +5,6 @@
   (lib (name "CD74HC04E")(type "KiCad")(uri "${KIPRJMOD}/syms/CD74HC04E.kicad_sym")(options "")(descr ""))
   (lib (name "MAX6765TTLD2_T")(type "KiCad")(uri "${KIPRJMOD}/syms/MAX6765TTLD2_T.kicad_sym")(options "")(descr ""))
   (lib (name "AP63301WU-7")(type "KiCad")(uri "${KIPRJMOD}/syms/AP63301WU-7.kicad_sym")(options "")(descr ""))
+  (lib (name "L1011011MS02Q")(type "KiCad")(uri "${KIPRJMOD}/syms/L1011011MS02Q.kicad_sym")(options "")(descr ""))
+  (lib (name "GF-123-0054")(type "KiCad")(uri "${KIPRJMOD}/syms/GF-123-0054.kicad_sym")(options "")(descr ""))
 )
