@@ -26,7 +26,8 @@
 #include "timer.h"
 #include "gpio.h"
 
-#define TRANSMIT_UART(msg) TransmitUart(UART_RPi, msg)
+#define PRINT_STRING(msg) TransmitUartString(UART_RPi, msg)
+#define PRINT_FLOAT(msg) TransmitUartFloat(UART_RPi, msg)
 
 void SystemClock_Config(void);
 
@@ -46,34 +47,42 @@ void SetupMotors() {
   motor_1.pwm_pin = 4;
   motor_1.pwm_af = 4;
   motor_1.GPIOx_dir = GPIOC;
-  motor_1.dir1_pin = 3;
+  motor_1.dir_pin = 3;
+  motor_1.GPIOx_enc = GPIOC;
+  motor_1.enc_pin = 7;
 
   MotorHandle motor_2;
   motor_2.GPIOx_pwm = GPIOB;
   motor_2.pwm_pin = 14;
   motor_2.pwm_af = 1;
   motor_2.GPIOx_dir = GPIOC;
-  motor_2.dir1_pin = 2;
+  motor_2.dir_pin = 2;
+  motor_2.GPIOx_enc = GPIOC;
+  motor_2.enc_pin = 6;
 
   MotorHandle motor_3;
   motor_3.GPIOx_pwm = GPIOA;
   motor_3.pwm_pin = 6;
   motor_3.pwm_af = 5;
   motor_3.GPIOx_dir = GPIOC;
-  motor_3.dir1_pin = 1;
+  motor_3.dir_pin = 1;
+  motor_3.GPIOx_enc = GPIOC;
+  motor_3.enc_pin = 9;
 
   MotorHandle motor_4;
   motor_4.GPIOx_pwm = GPIOA;
   motor_4.pwm_pin = 7;
   motor_4.pwm_af = 5;
   motor_4.GPIOx_dir = GPIOC;
-  motor_4.dir1_pin = 0;
+  motor_4.dir_pin = 0;
+  motor_4.GPIOx_enc = GPIOC;
+  motor_4.enc_pin = 8;
 
   SetupMotor(motor_1);
   SetupMotor(motor_2);
   SetupMotor(motor_3);
   SetupMotor(motor_4);
-}le
+}
 
 int main()
 {
@@ -94,7 +103,8 @@ int main()
   while (1)
   {
     
-    TRANSMIT_UART("Hello Kash");
+    PRINT_STRING("Hello Kash");
+    PRINT_FLOAT(0.7);
 
   }
 }

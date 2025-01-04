@@ -71,12 +71,12 @@ void SetupMotorPwm(GPIO_TypeDef * GPIOx, uint8_t pwm_pin, uint8_t af){
 
 }
 
-void SetupMotorDir1(GPIO_TypeDef * GPIOx, uint8_t dir1_pin){
+void SetupMotorDir(GPIO_TypeDef * GPIOx, uint8_t dir_pin){
   
-  SetupGpioOut(GPIOx, dir1_pin);
+  SetupGpioOut(GPIOx, dir_pin);
 
   // test:
-  SetGpioOutOn(GPIOx, dir1_pin);
+  SetGpioOutOn(GPIOx, dir_pin);
 
 }
 
@@ -84,7 +84,8 @@ void SetupMotorDir1(GPIO_TypeDef * GPIOx, uint8_t dir1_pin){
 void SetupMotor(MotorHandle motor_handle) {
 
   SetupMotorPwm(motor_handle.GPIOx_pwm, motor_handle.pwm_pin, motor_handle.pwm_af);
-  SetupMotorDir1(motor_handle.GPIOx_dir, motor_handle.dir1_pin);
+  SetupMotorDir(motor_handle.GPIOx_dir, motor_handle.dir_pin);
+  SetupMotorEnc(motor_handle.GPIOx_enc, motor_handle.enc_pin);
 
 }
 
@@ -107,7 +108,11 @@ void SetMotorDutyCycle(MotorHandle motor_handle, uint8_t pwm) {
     TIMx->CCR1 = pwm;
 
   }
+}
 
+void SetupMotorEnc(GPIO_TypeDef * GPIOx, uint8_t enc_pin){
+  
+  SetupGpioIn(GPIOx, enc_pin);
 
 }
 

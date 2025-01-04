@@ -29,6 +29,8 @@
 USART_TypeDef* SetupUartRc();
 USART_TypeDef* SetupUartRpi();
 void ReceiveUart(USART_TypeDef* USARTx); 
-void TransmitUart(USART_TypeDef* USARTx, char* string_tx);
+void TransmitUartString(USART_TypeDef* USARTx, char* string_tx);
+void TransmitUartFloat(USART_TypeDef* USARTx, float float_tx);
+void TransmitUartInt(USART_TypeDef* USARTx, int int_tx);
 
 #endif /* UART_H */

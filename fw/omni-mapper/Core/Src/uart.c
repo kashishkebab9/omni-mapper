@@ -23,6 +23,7 @@
 #include "uart.h"
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 
 // There are only two UART peripherals that we can use on this mcu
 // No need to map things, we can just have two functions to set up each of these
@@ -211,7 +212,7 @@ void ReceiveUart(USART_TypeDef* USARTx) {
 
 }
 
-void TransmitUart(USART_TypeDef* USARTx, char* string_tx) {
+void TransmitUartString(USART_TypeDef* USARTx, char* string_tx) {
   USARTx->CR2 &~ USART_CR2_STOP_0;
   USARTx->CR2 &~ USART_CR2_STOP_1;
 
@@ -234,4 +235,14 @@ void TransmitUart(USART_TypeDef* USARTx, char* string_tx) {
 
 }
 
+void TransmitUartFloat(USART_TypeDef* USARTx, float float_tx) {
+  char string_buffer[50];
+  sprintf(string_buffer, "%.2f", float_tx);
+  TransmitUartString(USARTx, string_buffer);
+
+}
+
+void TransmitUartInt(USART_TypeDef* USARTx, int int_tx){
+  
+}
 
