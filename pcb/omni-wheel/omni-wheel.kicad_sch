@@ -4565,7 +4565,7 @@
 	)
 	(wire
 		(pts
-			(xy 260.35 81.28) (xy 247.65 81.28)
+			(xy 261.62 81.28) (xy 247.65 81.28)
 		)
 		(stroke
 			(width 0)
@@ -5085,7 +5085,7 @@
 	)
 	(wire
 		(pts
-			(xy 260.35 88.9) (xy 247.65 88.9)
+			(xy 261.62 88.9) (xy 247.65 88.9)
 		)
 		(stroke
 			(width 0)
@@ -5315,7 +5315,7 @@
 	)
 	(wire
 		(pts
-			(xy 260.35 73.66) (xy 247.65 73.66)
+			(xy 261.62 73.66) (xy 247.65 73.66)
 		)
 		(stroke
 			(width 0)
@@ -5405,7 +5405,7 @@
 	)
 	(wire
 		(pts
-			(xy 260.35 71.12) (xy 247.65 71.12)
+			(xy 261.62 71.12) (xy 247.65 71.12)
 		)
 		(stroke
 			(width 0)
@@ -5615,6 +5615,16 @@
 	)
 	(wire
 		(pts
+			(xy 134.4713 174.0014) (xy 126.8513 174.0014)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "83c8b332-b9a1-438a-8fd2-5dee0cdb981b")
+	)
+	(wire
+		(pts
 			(xy 26.9735 73.6576) (xy 24.4335 73.6576)
 		)
 		(stroke
@@ -5765,6 +5775,16 @@
 	)
 	(wire
 		(pts
+			(xy 134.3015 190.2313) (xy 126.6815 190.2313)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "943ce5f8-c974-4393-ab59-14da408004a9")
+	)
+	(wire
+		(pts
 			(xy 93.7728 96.8939) (xy 93.7815 96.8939)
 		)
 		(stroke
@@ -5872,6 +5892,16 @@
 			(type default)
 		)
 		(uuid "aa4dea77-764a-4fb2-85ac-0a5079631520")
+	)
+	(wire
+		(pts
+			(xy 134.4713 185.4314) (xy 126.8513 185.4314)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "abc4ae73-f1f3-43ea-8390-811693e7f6ab")
 	)
 	(wire
 		(pts
@@ -6385,7 +6415,7 @@
 	)
 	(wire
 		(pts
-			(xy 260.35 76.2) (xy 247.65 76.2)
+			(xy 261.62 76.2) (xy 247.65 76.2)
 		)
 		(stroke
 			(width 0)
@@ -6515,7 +6545,7 @@
 	)
 	(wire
 		(pts
-			(xy 260.35 91.44) (xy 247.65 91.44)
+			(xy 261.62 91.44) (xy 247.65 91.44)
 		)
 		(stroke
 			(width 0)
@@ -6575,13 +6605,23 @@
 	)
 	(wire
 		(pts
-			(xy 260.35 83.82) (xy 247.65 83.82)
+			(xy 261.62 83.82) (xy 247.65 83.82)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "f618d2df-72a5-4164-92e3-f36c7882770e")
+	)
+	(wire
+		(pts
+			(xy 134.4713 179.0814) (xy 126.8513 179.0814)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fa3ddf0d-5f3c-408c-a0da-583ab4585aa5")
 	)
 	(wire
 		(pts
@@ -14695,7 +14735,7 @@
 	)
 	(text_box "UART_RC_RX is the RX port on the EP1 \nUART_RC_TX is the TX port on the EP1 "
 		(exclude_from_sim no)
-		(at 179.3068 86.4805 0)
+		(at 147.8519 100.377 0)
 		(size 30.2397 10.3189)
 		(stroke
 			(width 0)
@@ -14745,7 +14785,8 @@
 		(uuid "081939b3-dfab-4739-b803-b3f1bcd7d545")
 	)
 	(label "UART_RC_TX"
-		(at 260.35 91.44 180)
+		(at 261.62 91.44 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -15217,7 +15258,7 @@
 		(uuid "8a727ca4-d468-4e6b-b6f5-34adca773356")
 	)
 	(label "UART_RPI_TX"
-		(at 260.35 73.66 180)
+		(at 261.62 73.66 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -15305,7 +15346,8 @@
 		(uuid "a1a1f2df-2324-4090-a116-6c3f6034425d")
 	)
 	(label "UART_RPI_RX"
-		(at 260.35 71.12 180)
+		(at 261.62 71.12 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -15337,7 +15379,7 @@
 		(uuid "b21671ce-ba37-45ea-9720-932064fa399e")
 	)
 	(label "Motor3_EN"
-		(at 260.35 83.82 180)
+		(at 261.62 83.82 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -15414,7 +15456,7 @@
 		(uuid "dcadbbda-df69-42f2-bcbf-c03eed5b8be5")
 	)
 	(label "Motor1_EN"
-		(at 260.35 76.2 180)
+		(at 261.62 76.2 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -15447,7 +15489,8 @@
 		(uuid "e5a16aab-e628-4533-a7fa-9bd5f9b32587")
 	)
 	(label "UART_RC_RX"
-		(at 260.35 88.9 180)
+		(at 261.62 88.9 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -15512,7 +15555,7 @@
 		(uuid "f3be67e1-db9b-4742-b7bd-65bf060d61c2")
 	)
 	(label "Motor4_EN"
-		(at 260.35 81.28 180)
+		(at 261.62 81.28 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -16068,6 +16111,70 @@
 			(project "omni-wheel"
 				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
 					(reference "#PWR035")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_01x01_Pin")
+		(at 121.7713 179.0814 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "146e50d3-6844-4d58-8edd-371ffc811b28")
+		(property "Reference" "J12"
+			(at 119.5539 179.0101 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "5V TP"
+			(at 122.4063 176.5414 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_THTPad_1.0x1.0mm_Drill0.5mm"
+			(at 121.7713 179.0814 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 121.7713 179.0814 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated"
+			(at 121.7713 179.0814 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "59a08c51-a0a0-436c-bbc1-00cf305c4f2e")
+		)
+		(instances
+			(project "omni-wheel"
+				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
+					(reference "J12")
 					(unit 1)
 				)
 			)
@@ -17154,6 +17261,72 @@
 			(project "omni-wheel"
 				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
 					(reference "J10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3.3V")
+		(at 134.4713 179.0814 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "40020144-1939-4080-b0e9-ab2f5624ba47")
+		(property "Reference" "#PWR046"
+			(at 134.4713 182.8914 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+5V"
+			(at 132.121 175.2626 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 134.4713 179.0814 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 134.4713 179.0814 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
+			(at 134.4713 179.0814 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b72c1b4a-dc77-40b3-afd3-e1cdca3a792d")
+		)
+		(instances
+			(project "omni-wheel"
+				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
+					(reference "#PWR046")
 					(unit 1)
 				)
 			)
@@ -18606,6 +18779,70 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x01_Pin")
+		(at 121.6015 190.2313 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "60d8cb68-8655-4629-a64b-f030fbada375")
+		(property "Reference" "J14"
+			(at 119.4916 190.0746 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND TP"
+			(at 122.2365 187.6913 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_THTPad_1.0x1.0mm_Drill0.5mm"
+			(at 121.6015 190.2313 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 121.6015 190.2313 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated"
+			(at 121.6015 190.2313 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "4bf212a2-004d-43fa-8cd8-3df54d3d4475")
+		)
+		(instances
+			(project "omni-wheel"
+				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
+					(reference "J14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 83.1728 59.3174 0)
 		(unit 1)
@@ -19191,6 +19428,72 @@
 			(project "omni-wheel"
 				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
 					(reference "#PWR017")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3.3V")
+		(at 134.3015 190.2313 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "72b0cafc-5ad5-4bc3-ab42-31326ae44b80")
+		(property "Reference" "#PWR048"
+			(at 134.3015 186.4213 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 136.6518 194.0501 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 134.3015 190.2313 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 134.3015 190.2313 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
+			(at 134.3015 190.2313 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a55456c1-6a0d-4365-a4a0-3d0f35037e64")
+		)
+		(instances
+			(project "omni-wheel"
+				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
+					(reference "#PWR048")
 					(unit 1)
 				)
 			)
@@ -19804,6 +20107,72 @@
 			(project ""
 				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
 					(reference "U1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3.3V")
+		(at 134.4713 185.4314 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8bfc17c6-6ab5-4660-b163-6d96499b4bdd")
+		(property "Reference" "#PWR047"
+			(at 134.4713 189.2414 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3.3V"
+			(at 132.121 181.6126 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 134.4713 185.4314 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 134.4713 185.4314 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
+			(at 134.4713 185.4314 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "efcd6015-953b-42c6-a07f-7812ca0a48ab")
+		)
+		(instances
+			(project "omni-wheel"
+				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
+					(reference "#PWR047")
 					(unit 1)
 				)
 			)
@@ -21062,6 +21431,70 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x01_Pin")
+		(at 121.7713 185.4314 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "ca21c306-46c6-4cf5-b266-44f80812487e")
+		(property "Reference" "J13"
+			(at 119.8406 185.4607 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "3.3v TP"
+			(at 122.4063 182.8914 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_THTPad_1.0x1.0mm_Drill0.5mm"
+			(at 121.7713 185.4314 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 121.7713 185.4314 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated"
+			(at 121.7713 185.4314 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ed81c61e-0618-48b6-a997-d5c0d6f98e16")
+		)
+		(instances
+			(project "omni-wheel"
+				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
+					(reference "J13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "CD74HC04E:CD74HC04E")
 		(at 139.9905 63.5124 0)
 		(unit 1)
@@ -22211,6 +22644,136 @@
 			(project "omni-wheel"
 				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
 					(reference "C17")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3.3V")
+		(at 134.4713 174.0014 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "efb5860d-f905-495c-b5f6-11ce86ddaf4e")
+		(property "Reference" "#PWR045"
+			(at 134.4713 177.8114 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+12V"
+			(at 132.121 170.1826 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 134.4713 174.0014 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 134.4713 174.0014 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
+			(at 134.4713 174.0014 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2f5808e8-1e1c-4fc9-9b8f-dfe167fc560b")
+		)
+		(instances
+			(project "omni-wheel"
+				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
+					(reference "#PWR045")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_01x01_Pin")
+		(at 121.7713 174.0014 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f474c87d-4d3b-436f-8a67-ef95ce74e2c5")
+		(property "Reference" "J1"
+			(at 120.0914 173.9571 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "12v TP"
+			(at 122.4063 171.9222 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_THTPad_1.0x1.0mm_Drill0.5mm"
+			(at 121.7713 174.0014 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 121.7713 174.0014 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated"
+			(at 121.7713 174.0014 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "8432e39e-282f-4df1-9fc1-1554f3907a47")
+		)
+		(instances
+			(project ""
+				(path "/00bcea37-6431-4bf6-91e9-3738f9d2ffd8"
+					(reference "J1")
 					(unit 1)
 				)
 			)
